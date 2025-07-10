@@ -1,11 +1,10 @@
 import React from 'react'
-import Hero from '../components/home/Hero'
-import Navbar from '../components/nav/Navbar'
-import AvailableStudySession from '../components/home/AvailableStudySession'
-import PlatformFeatures from '../components/home/PlatformFeatures'
-import HowItWorks from '../components/home/HowItWorks'
-import WhyNexLearn from '../components/home/WhyNexLearn'
-import CallToAction from '../components/home/CallToAction'
+import Hero from '../components/users/home/Hero'
+import AvailableStudySession from '../components/users/home/AvailableStudySession'
+import PlatformFeatures from '../components/users/home/PlatformFeatures'
+import HowItWorks from '../components/users/home/HowItWorks'
+import WhyNexLearn from '../components/users/home/WhyNexLearn'
+import CallToAction from '../components/users/home/CallToAction'
 
 const Home = () => {
   return (

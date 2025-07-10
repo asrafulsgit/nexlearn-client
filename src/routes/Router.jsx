@@ -2,14 +2,19 @@
 import { createBrowserRouter } from "react-router";
 import App from "../App";
 import Home from "../pages/Home";
-import StudySessions from "../components/studySessions/StudySessions";
-import Tutors from "../components/tutors/Tutors";
-import AboutUs from "../components/aboutUs/AboutUs";
-import Contact from "../components/contact/Contact";
-import FAQ from "../components/faq/FAQ";
-import SessionDetails from "../components/studySessions/SessionDetails";
-import Register from "../components/register/Register";
-import Login from "../components/login/Login";
+import StudySessions from "../components/users/studySessions/StudySessions";
+import Tutors from "../components/users/tutors/Tutors";
+import AboutUs from "../components/users/aboutUs/AboutUs";
+import Contact from "../components/users/contact/Contact";
+import FAQ from "../components/users/faq/FAQ";
+import SessionDetails from "../components/users/studySessions/SessionDetails";
+import Login from "../components/authenticator/login/Login";
+import Register from "../components/authenticator/register/Register";
+import BookedSessions from "../components/student/BookedSessions";
+import CreateNote from "../components/student/CreateNote";
+import ManageNotes from "../components/student/ManageNotes";
+import StudyMaterials from "../components/student/StudyMaterials";
+
 
 
 const Router = createBrowserRouter([
@@ -33,40 +38,6 @@ const Router = createBrowserRouter([
                 path : 'tutors',
                 Component : Tutors 
             },
-            // { 
-            //     path : 'event-details/:id',
-            //     element : <Auth_middleware><Event_details /></Auth_middleware>,
-            //     errorElement : <NotFoundPage />
-            // },
-            // { 
-            //     path : 'manage-events',
-            //     element : <Auth_middleware><Manage_events /></Auth_middleware>,
-            // },
-            // { 
-            //     path : 'update-event/:id',
-            //     element : <Auth_middleware><Update_event /></Auth_middleware>,
-            //     errorElement : <NotFoundPage />
-            // },
-            // { 
-            //     path : 'create-event',
-            //     element : <Auth_middleware><Create_event /></Auth_middleware>,
-            // },
-            // { 
-            //     path : 'my-bookings',
-            //     element : <Auth_middleware><My_bookings /></Auth_middleware> 
-            // },
-            // { 
-            //     path : 'book-event',
-            //     element : <Auth_middleware><Book_event /></Auth_middleware>
-            // },
-            // { 
-            //     path : 'profile',
-            //     element : <Auth_middleware><Profile /></Auth_middleware>
-            // },
-            // { 
-            //     path : 'update-profile',
-            //     element : <Auth_middleware><Profile_Update /></Auth_middleware>
-            // },
             { 
                 path : 'login', 
                 element : <Login /> 
@@ -86,7 +57,25 @@ const Router = createBrowserRouter([
             { 
                 path : 'faqs', 
                 Component : FAQ  
+            },  
+            {                       // student auth pages
+                path : 'booked-sessions', 
+                Component : BookedSessions  
             },
+            {                        
+                path : 'create-note', 
+                Component : CreateNote  
+            },
+            {                        
+                path : 'manage-notes', 
+                Component : ManageNotes  
+            },
+            {                        
+                path : 'study-materials', 
+                Component : StudyMaterials 
+            },
+
+
     //         { 
     //             path : 'forget-password',
     //             element : <UnAuth_middleware><Forget_password />  </UnAuth_middleware> 
