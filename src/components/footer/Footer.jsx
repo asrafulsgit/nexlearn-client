@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router";
 
  const  Footer =()=> {
   return (
@@ -12,17 +13,17 @@ import React from "react";
             to enhance learning through structured sessions and shared resources.
           </p>
         </div>
-
+{/* "home", "tutors", "study-sessions", "about-us", "contact", "faqs" */}
         {/* Quick Links */}
         <div>
           <h3 className="text-white font-semibold text-lg mb-4">Quick Links</h3>
           <ul className="space-y-2">
-            <li><a href="/" className="hover:text-white transition">Home</a></li>
-            <li><a href="/sessions" className="hover:text-white transition">Study Sessions</a></li>
-            <li><a href="/tutors" className="hover:text-white transition">Tutors</a></li>
-            <li><a href="/about" className="hover:text-white transition">About Us</a></li>
-            <li><a href="/contact" className="hover:text-white transition">Contact</a></li>
-            <li><a href="/faq" className="hover:text-white transition">FAQs</a></li>
+            <li><Link to='/'  className="hover:text-white transition">Home</Link></li>
+            <li><Link  to='/tutors'  className="hover:text-white transition">Study Sessions</Link></li>
+            <li><Link to='/study-sessions'   className="hover:text-white transition">Tutors</Link></li>
+            <li><Link to='/about-us'  className="hover:text-white transition">About Us</Link></li>
+            <li><Link to='/contact'   className="hover:text-white transition">Contact</Link></li>
+            <li><Link to='/faqs'   className="hover:text-white transition">FAQs</Link></li>
           </ul>
         </div>
 

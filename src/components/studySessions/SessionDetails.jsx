@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const SessionDetailsPage = () => {
+const SessionDetails = () => {
   const session = {
     _id: "abc123",
     title: "Advanced React Study Group",
@@ -224,4 +224,4 @@ const SessionDetailsPage = () => {
   );
 };
 
-export default SessionDetailsPage;
+export default SessionDetails;

@@ -8,6 +8,8 @@ import AboutUs from "../components/aboutUs/AboutUs";
 import Contact from "../components/contact/Contact";
 import FAQ from "../components/faq/FAQ";
 import SessionDetails from "../components/studySessions/SessionDetails";
+import Register from "../components/register/Register";
+import Login from "../components/login/Login";
 
 
 const Router = createBrowserRouter([
@@ -65,14 +67,14 @@ const Router = createBrowserRouter([
             //     path : 'update-profile',
             //     element : <Auth_middleware><Profile_Update /></Auth_middleware>
             // },
-            // { 
-            //     path : 'login', 
-            //     element : <UnAuth_middleware><Login />  </UnAuth_middleware> 
-            // },
-            // { 
-            //     path : 'signup', 
-            //     element : <UnAuth_middleware><Register />  </UnAuth_middleware> 
-            // },
+            { 
+                path : 'login', 
+                element : <Login /> 
+            },
+            { 
+                path : 'register', 
+                element : <Register />  
+            },
             { 
                 path : 'about-us', 
                 Component : AboutUs  
