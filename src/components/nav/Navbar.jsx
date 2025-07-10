@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router";
-
+import { Link, NavLink } from "react-router";
+import './navbar.css'
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -24,35 +24,37 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="bg-white shadow-sm sticky top-0 z-40 border-b border-neutral-200/20">
+    <nav className="navbar-section bg-white shadow-sm sticky top-0 z-40 border-b border-neutral-200/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             {/* Logo */}
-            <a  className="flex-shrink-0 flex items-center">
+            <Link  to='/' className="flex-shrink-0 flex items-center">
               <img
                 className="h-8 w-auto"
                 src="https://images.unsplash.com/photo-1663813064379-e35ad59c486d?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w2MzQ2fDB8MXxzZWFyY2h8MXx8TmV4TGVhcm4lMjUyMGxvZ298ZW58MXwwfHx8MTc1MjEyMzMzMXww&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080"
                 alt="NexLearn Logo"
               />
               <span className="ml-2 text-xl font-bold text-gray-900">NexLearn</span>
-            </a>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:ml-6 lg:flex lg:space-x-8">
             {["home", "tutors", "study-sessions", "about-us", "contact", "faqs"].map((id) => (
-              <a
+              <NavLink
                 key={id}
-                href={`#${id}`}
+                to={id === 'home' ? `/` : `/${id}`}
                 onClick={() => showSection(id)}
-                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-900 border-b-2 border-transparent hover:border-green-500 transition-colors duration-200"
+                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500
+                 hover:text-gray-900 
+                  transition-colors duration-200"
               >
                 {id
                   .split("-")
                   .map((word) => word[0].toUpperCase() + word.slice(1))
                   .join(" ")}
-              </a>
+              </NavLink>
             ))}
           </div>
 
@@ -66,7 +68,9 @@ const Navbar = () => {
             </button>
             <button
               type="button"
-              className="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200"
+              className="ml-3 inline-flex items-center px-4 py-2 border 
+              border-transparent rounded-md shadow-sm text-sm font-medium text-white
+               bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200"
             >
               Register
             </button>

@@ -3,10 +3,10 @@ const howItWorksSteps = [
     title: "Sign Up",
     description: "Create your free account in minutes to get started.",
     iconBg: "bg-blue-100 text-blue-600",
-    image: "https://images.unsplash.com/photo-1701170645257-8345722edf47?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2MzQ2fDB8MXxzZWFyY2h8MXx8c3R1ZGVudCUyNTIwYXBwJTI1MjBpbnRlcmFjdGlvbnxlbnwxfDB8fHwxNzUyMTI3NzI2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+    image: "https://images.unsplash.com/photo-1701170645257-8345722edf47?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     icon: (
-      <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM12 14c-1.49 0-2.92.357-4.21.997M12 14c1.49 0 2.92.357 4.21.997M12 14v7m0-7h-4m4 0h4" />
+      <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14v7" />
       </svg>
     ),
   },
@@ -14,10 +14,10 @@ const howItWorksSteps = [
     title: "Explore Sessions",
     description: "Browse available study sessions and resources by topic.",
     iconBg: "bg-green-100 text-green-600",
-    image: "https://images.unsplash.com/photo-1664188613064-7eea761238f0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2MzQ2fDB8MXxzZWFyY2h8Mnx8c3R1ZGVudCUyNTIwYXBwJTI1MjBpbnRlcmFjdGlvbnxlbnwxfDB8fHwxNzUyMTI3NzI2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+    image: "https://images.unsplash.com/photo-1664188613064-7eea761238f0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     icon: (
-      <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
       </svg>
     ),
   },
@@ -25,10 +25,10 @@ const howItWorksSteps = [
     title: "Join & Collaborate",
     description: "Participate in sessions and collaborate with your peers.",
     iconBg: "bg-purple-100 text-purple-600",
-    image: "https://images.unsplash.com/photo-1659080907097-6153cd4ff69d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2MzQ2fDB8MXxzZWFyY2h8M3x8c3R1ZGVudCUyNTIwYXBwJTI1MjBpbnRlcmFjdGlvbnxlbnwxfDB8fHwxNzUyMTI3NzI2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+    image: "https://images.unsplash.com/photo-1659080907097-6153cd4ff69d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     icon: (
-      <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM12 14c-1.49 0-2.92.357-4.21.997M12 14c1.49 0 2.92.357 4.21.997M12 14v7m0-7h-4m4 0h4" />
+      <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M2 20h15m-13-2v-2a3 3 0 015.356-1.857M13 10V4a1 1 0 00-1-1H8a1 1 0 00-1 1v6m-2 0h8" />
       </svg>
     ),
   },
@@ -38,12 +38,13 @@ const howItWorksSteps = [
     iconBg: "bg-red-100 text-red-600",
     image: "https://placehold.co/600x400?text=Track+Progress",
     icon: (
-      <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+      <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 17h2a2 2 0 002-2V9a2 2 0 00-2-2H3m6 10h2a2 2 0 002-2V5a2 2 0 00-2-2H9m6 18h2a2 2 0 002-2v-6a2 2 0 00-2-2h-2" />
       </svg>
     ),
   },
 ];
+
 
 const HowItWorks = () => {
   return (

@@ -10,7 +10,6 @@ import CallToAction from '../components/home/CallToAction'
 const Home = () => {
   return (
     <>  
-        <Navbar />
         <Hero />
         <AvailableStudySession />
         <PlatformFeatures />

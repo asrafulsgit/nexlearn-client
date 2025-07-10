@@ -11,28 +11,28 @@ const features = [
     description: "Upload and download study materials, notes, and guides.",
     iconBg: "bg-green-500",
     iconPath:
-      "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13...",
+      "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253",
   },
   {
-    title: "Group Collaboration",
-    description: "Work together on projects and assignments in real-time.",
-    iconBg: "bg-purple-500",
-    iconPath:
-      "M17 20h5v-2a3 3 0 00-5.356-1.857...",
-  },
+  title: "Group Collaboration",
+  description: "Work together on projects and assignments in real-time.",
+  iconBg: "bg-purple-500",
+  iconPath:
+    "M7 8h10M7 12h6m-2 8a9 9 0 100-18 9 9 0 000 18zm0 0v-2m0-4h.01",
+},
   {
-    title: "Connect with Tutors",
-    description: "Find and connect with verified tutors for personalized help.",
-    iconBg: "bg-red-500",
-    iconPath:
-      "M18 9v3m0 0v3m0-3h3m-3 0h-3...",
-  },
+  title: "Connect with Tutors",
+  description: "Find and connect with verified tutors for personalized help.",
+  iconBg: "bg-red-500",
+  iconPath:
+    "M17 20h5v-2a3 3 0 00-5.356-1.857M9 20H4v-2a3 3 0 015.356-1.857M16 7a4 4 0 11-8 0 4 4 0 018 0z",
+},
   {
     title: "Secure & Managed Access",
     description: "Enjoy a safe and well-managed learning environment.",
     iconBg: "bg-yellow-500",
     iconPath:
-      "M9 12l2 2 4-4m5.618-4.016A11.955...",
+      "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.001 12.001 0 002.944 12c0 2.873.99 5.51 2.66 7.534L12 22.944l6.396-3.41A12.001 12.001 0 0021.056 12c0-2.873-.99-5.51-2.66-7.534z",
   },
   {
     title: "Track Learning Progress",
@@ -42,6 +42,7 @@ const features = [
       "M13 7h8m0 0v8m0-8l-8 8-4-4-6 6",
   },
 ];
+
 
 const PlatformFeatures = () => {
   return (

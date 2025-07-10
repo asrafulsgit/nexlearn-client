@@ -1,7 +1,12 @@
 const CallToAction = () => {
   return (
-    <section id="call-to-action" className="py-16 bg-blue-600 text-white text-center relative overflow-hidden">
-      <div className="absolute inset-0 opacity-20">
+    <section
+      id="call-to-action"
+      className="py-16 bg-green-600 text-white text-center 
+      relative overflow-hidden border-b border-green-400
+      "
+    >
+      <div className="absolute inset-0 opacity-15">
         <img
           src="https://images.unsplash.com/photo-1600456899121-68eda5705257?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w2MzQ2fDB8MXxzZWFyY2h8MXx8c3R1ZGVudHMlMjUyMGFjaGlldmluZyUyNTIwZ29hbHN8ZW58MXwwfHx8MTc1MjA4NTk2N3ww&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080"
           alt="Abstract background pattern"
@@ -15,13 +20,17 @@ const CallToAction = () => {
         <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
           <a
             href="#"
-            className="inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-medium rounded-md text-blue-600 bg-white hover:bg-blue-50 transition-colors duration-300 shadow-lg"
+            className="inline-flex items-center justify-center px-8 py-4 border 
+            border-transparent text-base font-medium rounded-md text-green-600 bg-white
+             hover:bg-green-100 transition-colors duration-300 shadow-sm"
           >
             Join Now
           </a>
           <a
             href="#"
-            className="inline-flex items-center justify-center px-8 py-4 border-2 border-white text-base font-medium rounded-md text-white hover:bg-white hover:text-blue-600 transition-colors duration-300 shadow-lg"
+            className="inline-flex items-center justify-center px-8 py-4 border-2 border-white 
+            text-base font-medium rounded-md text-white hover:bg-white hover:text-green-600 
+            transition-colors duration-300  shadow-sm"
           >
             Browse Sessions
           </a>
