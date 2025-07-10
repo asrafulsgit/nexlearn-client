@@ -7,6 +7,7 @@ import Tutors from "../components/tutors/Tutors";
 import AboutUs from "../components/aboutUs/AboutUs";
 import Contact from "../components/contact/Contact";
 import FAQ from "../components/faq/FAQ";
+import SessionDetails from "../components/studySessions/SessionDetails";
 
 
 const Router = createBrowserRouter([
@@ -21,6 +22,10 @@ const Router = createBrowserRouter([
             { 
                 path : 'study-sessions',
                 Component : StudySessions 
+            },
+            { 
+                path : 'session/:id',
+                Component : SessionDetails 
             },
             { 
                 path : 'tutors',
