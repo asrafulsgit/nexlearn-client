@@ -73,6 +73,48 @@ const Navbar = () => {
       path : 'study-materials'
     }
   ]
+  const tutor = [
+    {
+      name : 'Create session',
+      path : 'create-session'
+    },
+    {
+      name : 'My sessions',
+      path : 'my-sessions'
+    },
+    {
+      name : 'Upload materials',
+      path : 'upload-materials'
+    },
+    {
+      name : 'Materials',
+      path : 'materials'
+    }
+  ]
+
+// 1. manage users 
+// 2. manage sessions 
+// 3. manage materials 
+// 4. manage tutor
+
+  const admin =[
+      {
+      name : 'Manage users',
+      path : 'manage-users'
+    },
+      {
+      name : 'Manage sessions',
+      path : 'manage-sessions'
+    },
+      {
+      name : 'Manage materials',
+      path : 'manage-materials'
+    },
+      {
+      name : 'Manage tutors',
+      path : 'manage-tutors'
+    }
+  ]
 
   return (
     <nav
@@ -249,8 +291,8 @@ const Navbar = () => {
             <div className="absolute right-0 mt-50 w-48 bg-white rounded-md 
             shadow-lg ring-1 ring-green-700 ring-opacity-5 z-50">
               <div className="px-4 py-2">
-                {student.map((item,index)=>(
-                  <NavLink
+                {admin.map((item,index)=>(
+                  <NavLink key={index}
                   to={`/${item.path}`}
                   className=" inline-flex items-center p-1 text-sm font-medium text-gray-500
                  hover:text-gray-900 transition-colors duration-200"

@@ -14,6 +14,14 @@ import BookedSessions from "../components/student/BookedSessions";
 import CreateNote from "../components/student/CreateNote";
 import ManageNotes from "../components/student/ManageNotes";
 import StudyMaterials from "../components/student/StudyMaterials";
+import CreateSession from "../components/tutor/CreateSession";
+import MySessions from "../components/tutor/MySessions";
+import UploadMaterials from "../components/tutor/UploadMaterials";
+import ManageUsers from "../components/admin/ManageUsers";
+import ManageSessions from "../components/admin/ManageSessions";
+import MyMatetials from "../components/tutor/MyMatetials";
+import ManageMaterials from "../components/admin/ManageMaterials";
+import ManageTutors from "../components/admin/ManageTutors";
 
 
 
@@ -73,6 +81,38 @@ const Router = createBrowserRouter([
             {                        
                 path : 'study-materials', 
                 Component : StudyMaterials 
+            },                              // tutor auth pages
+            {                        
+                path : 'create-session', 
+                Component : CreateSession 
+            },
+            {                        
+                path : 'my-sessions', 
+                Component : MySessions 
+            },
+            {                        
+                path : 'upload-materials', 
+                Component : UploadMaterials 
+            },
+            {                        
+                path : 'materials', 
+                Component : MyMatetials 
+            },
+            {                           // admin auth pages                    
+                path : 'manage-users', 
+                Component : ManageUsers 
+            },
+            {                        
+                path : 'manage-sessions', 
+                Component : ManageSessions 
+            },
+            {                        
+                path : 'manage-materials', 
+                Component : ManageMaterials
+            },
+            {                        
+                path : 'manage-tutors', 
+                Component : ManageTutors
             },
 
 
