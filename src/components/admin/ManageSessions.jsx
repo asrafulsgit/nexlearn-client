@@ -21,12 +21,13 @@ const ManageSessions = () => {
   const [selectedSession, setSelectedSession] = useState(null);
   const [approvalModal, setApprovalModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
+  const [rejectionModal, setRejectionModal] = useState(false);
+
   const [fee, setFee] = useState("");
-  const [editData, setEditData] = useState({
-    title: "",
-    tutor: "",
-    fee: 0,
-  });
+  const [editData, setEditData] = useState({ fee: 0 });
+
+  const [rejectionReason, setRejectionReason] = useState("");
+  const [rejectionFeedback, setRejectionFeedback] = useState("");
 
   const handleApprove = (session) => {
     setSelectedSession(session);
@@ -46,9 +47,23 @@ const ManageSessions = () => {
     setFee("");
   };
 
-  const handleReject = (id) => {
-    const filtered = sessions.filter((s) => s.id !== id);
+  const handleReject = (session) => {
+    setSelectedSession(session);
+    setRejectionModal(true);
+  };
+
+  const confirmReject = () => {
+    const filtered = sessions.filter((s) => s.id !== selectedSession.id);
+    console.log("Rejected session:", {
+      id: selectedSession.id,
+      reason: rejectionReason,
+      feedback: rejectionFeedback,
+    });
     setSessions(filtered);
+    setRejectionModal(false);
+    setSelectedSession(null);
+    setRejectionReason("");
+    setRejectionFeedback("");
   };
 
   const handleDelete = (id) => {
@@ -57,11 +72,7 @@ const ManageSessions = () => {
   };
 
   const handleEdit = (session) => {
-    setEditData({
-      title: session.title,
-      tutor: session.tutor,
-      fee: session.fee,
-    });
+    setEditData({ fee: session.fee });
     setSelectedSession(session);
     setEditModal(true);
   };
@@ -69,12 +80,7 @@ const ManageSessions = () => {
   const confirmEdit = () => {
     const updated = sessions.map((s) =>
       s.id === selectedSession.id
-        ? {
-            ...s,
-            title: editData.title,
-            tutor: editData.tutor,
-            fee: parseFloat(editData.fee),
-          }
+        ? { ...s, fee: parseFloat(editData.fee) }
         : s
     );
     setSessions(updated);
@@ -83,78 +89,76 @@ const ManageSessions = () => {
   };
 
   return (
-  <> 
-  <div className="max-w-7xl mx-auto px-4 min-h-[70vh]">
-      <div className="my-8">
-        <h2 className="text-2xl font-bold mb-1">Manage Study Sessions</h2>
-        <p className="text-gray-500 ">
-          Approve, reject, update, or delete sessions.
-        </p>
-      </div>
-      {/* sessions table */}
-      <div className="overflow-x-auto">
-        <table className="w-full bg-white shadow rounded-md 
-        overflow-hidden ">
-          <thead className="bg-green-100 text-gray-800">
-            <tr>
-              <th className="px-4 py-3 text-left">Title</th>
-              <th className="px-4 py-3 text-left">Tutor</th>
-              <th className="px-4 py-3 text-left">Status</th>
-              <th className="px-4 py-3 text-left">Fee</th>
-              <th className="px-4 py-3 text-left">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sessions.map((session) => (
-              <tr key={session.id} className="border-t border-gray-200 hover:bg-gray-50">
-                <td className="px-4 py-3">{session.title}</td>
-                <td className="px-4 py-3">{session.tutor}</td>
-                <td className="px-4 py-3 capitalize">{session.status}</td>
-                <td className="px-4 py-3">
-                  {session.fee === 0 ? "Free" : `$${session.fee}`}
-                </td>
-                <td className="px-4 py-3 space-x-2">
-                  {session.status === "pending" ? (
-                    <>
-                      <button
-                        onClick={() => handleApprove(session)}
-                        className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
-                      >
-                        Approve
-                      </button>
-                      <button
-                        onClick={() => handleReject(session.id)}
-                        className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-                      >
-                        Reject
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <button
-                        onClick={() => handleEdit(session)}
-                        className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
-                      >
-                        Update
-                      </button>
-                      <button
-                        onClick={() => handleDelete(session.id)}
-                        className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-                      >
-                        Delete
-                      </button>
-                    </>
-                  )}
-                </td>
+    <>
+      <div className="max-w-7xl mx-auto px-4 min-h-[70vh]">
+        <div className="my-8">
+          <h2 className="text-2xl font-bold mb-1">Manage Study Sessions</h2>
+          <p className="text-gray-500">Approve, reject, update, or delete sessions.</p>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm bg-white rounded shadow">
+            <thead className="bg-green-100 text-gray-700">
+              <tr>
+                <th className="px-4 py-3 text-left">Title</th>
+                <th className="px-4 py-3 text-left">Tutor</th>
+                <th className="px-4 py-3 text-left">Status</th>
+                <th className="px-4 py-3 text-left">Fee</th>
+                <th className="px-4 py-3 text-left">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {sessions.map((session) => (
+                <tr key={session.id} className="border-t border-gray-200 hover:bg-gray-50">
+                  <td className="px-4 py-3">{session.title}</td>
+                  <td className="px-4 py-3">{session.tutor}</td>
+                  <td className="px-4 py-3 capitalize">{session.status}</td>
+                  <td className="px-4 py-3">
+                    {session.fee === 0 ? "Free" : `$${session.fee}`}
+                  </td>
+                  <td className="px-4 py-3 space-x-2">
+                    {session.status === "pending" ? (
+                      <>
+                        <button
+                          onClick={() => handleApprove(session)}
+                          className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
+                        >
+                          Approve
+                        </button>
+                        <button
+                          onClick={() => handleReject(session)}
+                          className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                        >
+                          Reject
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => handleEdit(session)}
+                          className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
+                        >
+                          Update
+                        </button>
+                        <button
+                          onClick={() => handleDelete(session.id)}
+                          className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                        >
+                          Delete
+                        </button>
+                      </>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+
       {/* Approval Modal */}
       {approvalModal && (
-        <div className="fixed inset-0 bg-black/40 bg-opacity-40 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-full max-w-md">
             <h3 className="text-xl font-semibold mb-4">Set Session Fee</h3>
             <label className="block text-sm text-gray-700 mb-2">
@@ -166,7 +170,7 @@ const ManageSessions = () => {
               value={fee}
               onChange={(e) => setFee(e.target.value)}
               placeholder="Enter fee amount"
-              className="w-full border px-4 py-2 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full border px-4 py-2 rounded mb-4"
             />
             <div className="flex justify-end gap-3">
               <button
@@ -188,9 +192,9 @@ const ManageSessions = () => {
 
       {/* Edit Modal */}
       {editModal && (
-        <div className="fixed inset-0 bg-black/40 bg-opacity-40 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-full max-w-md">
-            <h3 className="text-xl font-semibold mb-4">Edit Session</h3>
+            <h3 className="text-xl font-semibold mb-4">Edit Session Fee</h3>
             <input
               type="number"
               min="0"
@@ -218,7 +222,49 @@ const ManageSessions = () => {
           </div>
         </div>
       )}
-    
+
+      {/* Rejection Modal */}
+      {rejectionModal && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg w-full max-w-md">
+            <h3 className="text-xl font-semibold mb-4 text-red-600">Reject Session</h3>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Rejection Reason
+            </label>
+            <input
+              type="text"
+              value={rejectionReason}
+              onChange={(e) => setRejectionReason(e.target.value)}
+              placeholder="Enter reason"
+              className="w-full mb-4 border px-4 py-2 rounded"
+            />
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Feedback (Optional)
+            </label>
+            <textarea
+              rows="3"
+              value={rejectionFeedback}
+              onChange={(e) => setRejectionFeedback(e.target.value)}
+              placeholder="Provide helpful feedback..."
+              className="w-full mb-4 border px-4 py-2 rounded"
+            />
+            <div className="flex justify-end gap-3">
+              <button
+                className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded"
+                onClick={() => setRejectionModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded"
+                onClick={confirmReject}
+              >
+                Confirm Reject
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

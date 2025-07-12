@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, NavLink } from "react-router";
+
 import "./navbar.css";
+import logoImage1 from '../../../assets/logo1.png'
 const Navbar = () => {
   const user = {
     name: "Asraful",
@@ -167,13 +169,10 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex-shrink-0 flex items-center">
             <img
-              className="h-8 w-auto"
-              src="https://images.unsplash.com/photo-1663813064379-e35ad59c486d?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w2MzQ2fDB8MXxzZWFyY2h8MXx8TmV4TGVhcm4lMjUyMGxvZ298ZW58MXwwfHx8MTc1MjEyMzMzMXww&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080"
+              className="h-15 w-auto"
+              src={logoImage1}
               alt="NexLearn Logo"
             />
-            <span className="ml-2 text-xl font-bold text-gray-900">
-              NexLearn
-            </span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -285,8 +284,8 @@ const Navbar = () => {
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           />
           {isDropdownOpen && (
-            <div className="absolute right-0 mt-50 w-48 bg-white rounded-md 
-            shadow-lg ring-1 ring-green-700 ring-opacity-5 z-50">
+            <div className={`absolute right-0 ${user?.role === 'admin' ? 'mt-43' : 'mt-50'} w-48 bg-white rounded-md 
+            shadow-lg ring-1 ring-green-700 ring-opacity-5 z-50`}>
               <div className="px-4 py-2">
                 {getDashboardLinks()?.map((item,index)=>(
                   <NavLink key={index}

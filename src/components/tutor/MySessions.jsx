@@ -21,6 +21,8 @@ const dummySessions = [
     classStart: "2025-07-20",
     classEnd: "2025-08-10",
     status: "rejected",
+    rejectionReason: "Content not aligned with syllabus",
+    feedback: "Please revise the course outline to focus more on core React topics.",
   },
   {
     id: "3",
@@ -36,29 +38,25 @@ const dummySessions = [
 
 const MySessions = () => {
   const [sessions, setSessions] = useState(dummySessions);
+  const [selectedReason, setSelectedReason] = useState(null);
 
   const handleResubmit = (id) => {
     const updated = sessions.map((session) =>
-      session.id === id
-        ? { ...session, status: "pending" }
-        : session
+      session.id === id ? { ...session, status: "pending" } : session
     );
     setSessions(updated);
     alert("Approval request sent successfully!");
   };
 
   return (
-    <section className="min-h-[70vh]  max-w-7xl mx-auto px-4 py-10">
+    <section className="min-h-[70vh] max-w-7xl mx-auto px-4 py-10">
       <h2 className="text-3xl font-bold mb-2 text-gray-800">My Study Sessions</h2>
-      <p className="text-gray-600 mb-6">
-        View and manage all of your submitted study sessions.
-      </p>
+      <p className="text-gray-600 mb-6">View and manage all of your submitted study sessions.</p>
 
       <div className="overflow-x-auto rounded-lg shadow">
         <table className="min-w-full bg-white text-sm text-left">
           <thead className="bg-green-600 text-white uppercase">
             <tr>
-              <th className="px-6 py-3">Sl No.</th>
               <th className="px-6 py-3">Image</th>
               <th className="px-6 py-3">Title</th>
               <th className="px-6 py-3">Reg. Dates</th>
@@ -70,7 +68,6 @@ const MySessions = () => {
           <tbody>
             {sessions.map((session, index) => (
               <tr key={session.id} className="border-b border-gray-300">
-                <td className="px-6 py-4">{index + 1}</td>
                 <td className="px-6 py-4">
                   <img
                     src={session.image}
@@ -78,9 +75,7 @@ const MySessions = () => {
                     className="w-16 h-16 object-cover rounded"
                   />
                 </td>
-                <td className="px-6 py-4 font-medium text-gray-900">
-                  {session.title}
-                </td>
+                <td className="px-6 py-4 font-medium text-gray-900">{session.title}</td>
                 <td className="px-6 py-4 text-gray-700">
                   {session.registrationStart} → {session.registrationEnd}
                 </td>
@@ -104,14 +99,22 @@ const MySessions = () => {
                     </span>
                   )}
                 </td>
-                <td className="px-6 py-4">
+                <td className="px-6 py-4 space-x-2">
                   {session.status === "rejected" ? (
-                    <button
-                      onClick={() => handleResubmit(session.id)}
-                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs"
-                    >
-                      Send New Request
-                    </button>
+                    <>
+                      <button
+                        onClick={() => handleResubmit(session.id)}
+                        className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs"
+                      >
+                        Send New Request
+                      </button>
+                      <button
+                        onClick={() => setSelectedReason(session)}
+                        className="px-3 py-1 bg-gray-600 hover:bg-gray-700 text-white rounded-md text-xs"
+                      >
+                        Reason
+                      </button>
+                    </>
                   ) : (
                     <span className="text-gray-400 text-xs italic">—</span>
                   )}
@@ -121,6 +124,29 @@ const MySessions = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Reason Modal */}
+      {selectedReason && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
+            <h3 className="text-xl font-semibold mb-4">Rejection Details</h3>
+            <p className="mb-2">
+              <strong>Reason:</strong> {selectedReason.rejectionReason || "Not specified"}
+            </p>
+            <p className="mb-4">
+              <strong>Feedback:</strong> {selectedReason.feedback || "No feedback provided"}
+            </p>
+            <div className="text-right">
+              <button
+                onClick={() => setSelectedReason(null)}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

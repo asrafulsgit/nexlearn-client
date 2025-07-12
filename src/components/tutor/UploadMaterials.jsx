@@ -59,6 +59,7 @@ const UploadMaterials = () => {
       <table className="w-full border border-gray-300 rounded-lg overflow-hidden">
         <thead className="bg-green-600 text-white">
           <tr>
+            <th className="text-left px-4 py-3">Image</th>
             <th className="text-left px-4 py-3">Session Title</th>
             <th className="text-left px-4 py-3">Start Date</th>
             <th className="text-left px-4 py-3">End Date</th>
@@ -71,6 +72,13 @@ const UploadMaterials = () => {
               key={session.id}
               className="border-b border-gray-200 hover:bg-gray-50"
             >
+               <td className="px-4 py-3">
+                  <img
+                    src={session?.image}
+                    alt={session?.title}
+                    className="w-16 h-16 object-cover rounded"
+                  />
+                </td>
               <td className="px-4 py-3">{session.title}</td>
               <td className="px-4 py-3">{session.startDate}</td>
               <td className="px-4 py-3">{session.endDate}</td>
