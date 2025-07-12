@@ -4,7 +4,8 @@ import "./navbar.css";
 const Navbar = () => {
   const user = {
     name: "Asraful",
-    photoURL: "https://i.ibb.co/xhh9JGM/user-avatar.png",
+    avatar: "https://i.ibb.co/xhh9JGM/user-avatar.png",
+    role: "tutor"
   };
 
   const [isOpen, setIsOpen] = useState(false);
@@ -54,7 +55,12 @@ const Navbar = () => {
   }, []);
 
   //dropdown items
-
+  const getDashboardLinks = () => {
+    if (user?.role === "student") return student;
+    if (user?.role === "tutor") return tutor;
+    if (user?.role === "admin") return admin;
+    return [];
+  };
   const student =[
     {
       name : 'Booked sessions',
@@ -92,11 +98,6 @@ const Navbar = () => {
     }
   ]
 
-// 1. manage users 
-// 2. manage sessions 
-// 3. manage materials 
-// 4. manage tutor
-
   const admin =[
       {
       name : 'Manage users',
@@ -109,10 +110,6 @@ const Navbar = () => {
       {
       name : 'Manage materials',
       path : 'manage-materials'
-    },
-      {
-      name : 'Manage tutors',
-      path : 'manage-tutors'
     }
   ]
 
@@ -282,7 +279,7 @@ const Navbar = () => {
                   Logout
                 </button>
           <img
-            src={user.photoURL}
+            src={user.avatar}
             alt={user.name}
             className="w-9 h-9 cursor-pointer rounded-full object-cover border border-green-500"
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -291,7 +288,7 @@ const Navbar = () => {
             <div className="absolute right-0 mt-50 w-48 bg-white rounded-md 
             shadow-lg ring-1 ring-green-700 ring-opacity-5 z-50">
               <div className="px-4 py-2">
-                {admin.map((item,index)=>(
+                {getDashboardLinks()?.map((item,index)=>(
                   <NavLink key={index}
                   to={`/${item.path}`}
                   className=" inline-flex items-center p-1 text-sm font-medium text-gray-500

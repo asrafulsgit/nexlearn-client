@@ -66,8 +66,8 @@ const confirmRoleChange = () => {
    <> 
    <div className="max-w-7xl mx-auto px-4 min-h-[80vh]">
       
-      <div className="my-8 text-center">
-      <h1 className="text-3xl font-bold text-gray-800 mb-2">Manage Users</h1>
+      <div className="my-8">
+      <h1 className="text-3xl font-bold text-gray-800 mb-1">Manage Users</h1>
       <p className="text-gray-600 ">
         View all users and update their roles (Student, Tutor, Admin) as needed.
       </p>
