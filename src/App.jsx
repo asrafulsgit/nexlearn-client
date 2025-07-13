@@ -1,15 +1,20 @@
 import React from 'react'
-import Home from './pages/Home'
 import Navbar from './components/users/nav/Navbar'
 import { Outlet } from 'react-router'
 import Footer from './components/users/footer/Footer'
+import Toastify from './additionals/Toastify'
+import ScrollVehaviour from './additionals/ScrollVehaviour'
 
 const App = () => {
   return (
     <>
-       <Navbar />
-       <Outlet />
-       <Footer />
+      <ScrollVehaviour />
+      <Toastify />
+       <>
+          <Navbar />
+          <Outlet />
+          <Footer />
+       </>
     </>
   )
 }
