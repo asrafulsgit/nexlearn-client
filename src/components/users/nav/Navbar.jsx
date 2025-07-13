@@ -1,14 +1,12 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { Link, NavLink } from "react-router";
 
 import "./navbar.css";
-import logoImage1 from '../../../assets/logo1.png'
+import logoImage1 from "../../../assets/logo1.png";
+import { AuthContext } from "../../../controllers/AuthProvider";
 const Navbar = () => {
-  const user = {
-    name: "Asraful",
-    avatar: "https://i.ibb.co/xhh9JGM/user-avatar.png",
-    role: "tutor"
-  };
+  const { isLoggedIn, userInfo } = useContext(AuthContext);
+  
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -21,7 +19,7 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    setUser(null); // Replace with your logout logic
+    
   };
 
   // Close mobile menu on window resize
@@ -35,7 +33,6 @@ const Navbar = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-
   // dropdown settings
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -43,10 +40,7 @@ const Navbar = () => {
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
       }
     };
@@ -58,62 +52,62 @@ const Navbar = () => {
 
   //dropdown items
   const getDashboardLinks = () => {
-    if (user?.role === "student") return student;
-    if (user?.role === "tutor") return tutor;
-    if (user?.role === "admin") return admin;
+    if (userInfo?.role === "student") return student;
+    if (userInfo?.role === "tutor") return tutor;
+    if (userInfo?.role === "admin") return admin;
     return [];
   };
-  const student =[
+  const student = [
     {
-      name : 'Booked sessions',
-      path : 'booked-sessions'
+      name: "Booked sessions",
+      path: "booked-sessions",
     },
     {
-      name : 'Create note',
-      path : 'create-note'
+      name: "Create note",
+      path: "create-note",
     },
     {
-      name : 'Manage notes',
-      path : 'manage-notes'
+      name: "Manage notes",
+      path: "manage-notes",
     },
     {
-      name : 'Study materials',
-      path : 'study-materials'
-    }
-  ]
+      name: "Study materials",
+      path: "study-materials",
+    },
+  ];
   const tutor = [
     {
-      name : 'Create session',
-      path : 'create-session'
+      name: "Create session",
+      path: "create-session",
     },
     {
-      name : 'My sessions',
-      path : 'my-sessions'
+      name: "My sessions",
+      path: "my-sessions",
     },
     {
-      name : 'Upload materials',
-      path : 'upload-materials'
+      name: "Upload materials",
+      path: "upload-materials",
     },
     {
-      name : 'Materials',
-      path : 'materials'
-    }
-  ]
+      name: "Materials",
+      path: "materials",
+    },
+  ];
 
-  const admin =[
-      {
-      name : 'Manage users',
-      path : 'manage-users'
+  const admin = [
+    {
+      name: "Manage users",
+      path: "manage-users",
     },
-      {
-      name : 'Manage sessions',
-      path : 'manage-sessions'
+    {
+      name: "Manage sessions",
+      path: "manage-sessions",
     },
-      {
-      name : 'Manage materials',
-      path : 'manage-materials'
-    }
-  ]
+    {
+      name: "Manage materials",
+      path: "manage-materials",
+    },
+  ];
 
   return (
     <nav
@@ -127,7 +121,10 @@ const Navbar = () => {
             <button
               type="button"
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-neutral-400 hover:text-white hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              className="inline-flex cursor-pointer items-center 
+              justify-center p-2 rounded-md text-neutral-400
+               hover:text-white hover:bg-neutral-700 focus:outline-none 
+               focus:ring-inset focus:ring-white"
               aria-controls="mobile-menu"
               aria-expanded={isOpen}
             >
@@ -168,11 +165,7 @@ const Navbar = () => {
 
           {/* Logo */}
           <Link to="/" className="flex-shrink-0 flex items-center">
-            <img
-              className="h-15 w-auto"
-              src={logoImage1}
-              alt="NexLearn Logo"
-            />
+            <img className="h-15 w-auto" src={logoImage1} alt="NexLearn Logo" />
           </Link>
 
           {/* Desktop Navigation */}
@@ -245,12 +238,16 @@ const Navbar = () => {
           </div> */}
 
           <div className="relative ml-6 flex items-center" ref={dropdownRef}>
-      {!user ? (
-        <>
-          <Link to="login">
+            {!isLoggedIn ? (
+              <>
+                <Link to="login">
                   <button
                     type="button"
-                    className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200"
+                    className="inline-flex cursor-pointer items-center
+                     px-4 py-2 border border-gray-300 rounded-md 
+                     shadow-sm text-sm font-medium text-gray-700
+                      bg-white hover:bg-gray-50 focus:outline-none 
+                       transition-colors duration-200"
                   >
                     Login
                   </button>
@@ -258,18 +255,17 @@ const Navbar = () => {
                 <Link to="register">
                   <button
                     type="button"
-                    className="ml-3 inline-flex items-center px-4 py-2 border 
+                    className="ml-3 cursor-pointer inline-flex items-center px-4 py-2 border 
               border-transparent rounded-md shadow-sm text-sm font-medium text-white
-               bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200"
+               bg-green-500 hover:bg-green-600 focus:outline-none  transition-colors duration-200"
                   >
                     Register
                   </button>
                 </Link>
-        </>
-      ) : (
-        <>
-
-          <button
+              </>
+            ) : (
+              <>
+                <button
                   onClick={handleLogout}
                   className="mr-2.5 text-sm px-4 py-2 cursor-pointer bg-gray-400 text-white rounded-md 
   hover:bg-gray-500 transition duration-300  
@@ -277,32 +273,37 @@ const Navbar = () => {
                 >
                   Logout
                 </button>
-          <img
-            src={user.avatar}
-            alt={user.name}
-            className="w-9 h-9 cursor-pointer rounded-full object-cover border border-green-500"
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          />
-          {isDropdownOpen && (
-            <div className={`absolute right-0 ${user?.role === 'admin' ? 'mt-43' : 'mt-50'} w-48 bg-white rounded-md 
-            shadow-lg ring-1 ring-green-700 ring-opacity-5 z-50`}>
-              <div className="px-4 py-2">
-                {getDashboardLinks()?.map((item,index)=>(
-                  <NavLink key={index}
-                  to={`/${item.path}`}
-                  className=" inline-flex items-center p-1 text-sm font-medium text-gray-500
+                <img
+                  src={userInfo.avatar || 'https://i.ibb.co/hRGTZWdX/download.jpg'}
+                  alt={userInfo.name }
+                  className="w-9 h-9 cursor-pointer rounded-full object-cover border border-green-500"
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                />
+                {isDropdownOpen && (
+                  <div
+                    className={`absolute right-0 ${
+                      userInfo?.role === "admin" ? "mt-43" : "mt-50"
+                    } w-48 bg-white rounded-md 
+            shadow-lg ring-1 ring-green-700 ring-opacity-5 z-50`}
+                  >
+                    <div className="px-4 py-2">
+                      {getDashboardLinks()?.map((item, index) => (
+                        <NavLink
+                          key={index}
+                          to={`/${item.path}`}
+                          className=" inline-flex items-center p-1 text-sm font-medium text-gray-500
                  hover:text-gray-900 transition-colors duration-200"
-                  onClick={() => setIsDropdownOpen(false)}
-                >
-                  {item.name}
-                </NavLink>
-                ))}
-              </div>
-            </div>
-          )}
-        </>
-      )}
-    </div>
+                          onClick={() => setIsDropdownOpen(false)}
+                        >
+                          {item.name}
+                        </NavLink>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
 
@@ -310,7 +311,7 @@ const Navbar = () => {
       {isOpen && (
         <div className="lg:hidden absolute inset-x-0 top-16 z-30 p-2 origin-top-right">
           <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-neutral-800/80 backdrop-blur-lg divide-y divide-neutral-700">
-            <div className="pt-5 pb-6 px-5">
+            
               <div className="space-y-1">
                 {[
                   "home",
@@ -319,32 +320,22 @@ const Navbar = () => {
                   "about-us",
                   "contact",
                   "faqs",
-                ].map((id) => (
-                  <a
-                    key={id}
-                    href={`#${id}`}
-                    onClick={() => showSection(id)}
+                ].map((item) => (
+                  <NavLink
+                    key={item}
+                    to={item === 'home' ? '/' : `/${item}`}
+                    onClick={() => showSection(item)}
                     className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-neutral-700"
                   >
-                    {id
+                    {item
                       .split("-")
                       .map((word) => word[0].toUpperCase() + word.slice(1))
                       .join(" ")}
-                  </a>
+                  </NavLink>
                 ))}
               </div>
-              <div className="mt-6">
-                <button className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-green-500 hover:bg-green-600">
-                  Register
-                </button>
-                <p className="mt-6 text-center text-base font-medium text-gray-300">
-                  Existing user?
-                  <button className="text-green-400 hover:text-green-300 ml-1">
-                    Login
-                  </button>
-                </p>
-              </div>
-            </div>
+             
+           
           </div>
         </div>
       )}

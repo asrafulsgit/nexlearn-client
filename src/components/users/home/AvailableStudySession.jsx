@@ -1,3 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
+import { apiRequiest } from "../../../utilities/handleApis";
+
 const sessions = [
   {
     title: "Advanced Calculus Review",
@@ -44,6 +47,11 @@ const sessions = [
 ];
 
 const AvailableStudySession = () => {
+  // const {data, isPending, isError, error} = useQuery({
+  //   queryKey: ['users'],
+  //   queryFn: () => apiRequiest('get', '/gardener/active'),
+  // });
+  // console.log(data)
   return (
     <section
       id="study-sessions"

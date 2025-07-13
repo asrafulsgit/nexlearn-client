@@ -1,5 +1,7 @@
 import axios from "axios";
 
+
+
 export const  apiRequiest = async(method,route,data=null,headers={}) =>{
      try {
           const res = await axios({
@@ -7,7 +9,7 @@ export const  apiRequiest = async(method,route,data=null,headers={}) =>{
                url :`${import.meta.env.VITE_BACKEND_URL}/api/v1${route}`,
                data,
                headers
-          })
+          });
           return res.data;
      } catch (error) {
           throw error;
