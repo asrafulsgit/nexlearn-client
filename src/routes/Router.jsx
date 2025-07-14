@@ -22,6 +22,10 @@ import ManageSessions from "../components/admin/ManageSessions";
 import MyMatetials from "../components/tutor/MyMatetials";
 import ManageMaterials from "../components/admin/ManageMaterials";
 import ManageTutors from "../components/admin/ManageTutors";
+import StudentAuth from "../middlewares/StudentAuth";
+import TutorAuth from "../middlewares/TutorAuth";
+import AdminAuth from "../middlewares/AdminAuth";
+import UnAuth from "../middlewares/UnAuth";
 
 
 
@@ -48,11 +52,11 @@ const Router = createBrowserRouter([
             },
             { 
                 path : 'login', 
-                element : <Login /> 
+                element : <UnAuth> <Login />  </UnAuth> 
             },
             { 
                 path : 'register', 
-                element : <Register />  
+                element : <UnAuth> <Register />  </UnAuth>
             },
             { 
                 path : 'about-us', 
@@ -68,51 +72,51 @@ const Router = createBrowserRouter([
             },  
             {                       // student auth pages
                 path : 'booked-sessions', 
-                Component : BookedSessions  
+                element : <StudentAuth> <BookedSessions /> </StudentAuth>   
             },
             {                        
                 path : 'create-note', 
-                Component : CreateNote  
+                element : <StudentAuth> <CreateNote /> </StudentAuth>  
             },
             {                        
                 path : 'manage-notes', 
-                Component : ManageNotes  
+                element : <StudentAuth> <ManageNotes /> </StudentAuth>  
             },
             {                        
                 path : 'study-materials', 
-                Component : StudyMaterials 
+                element : <StudentAuth > <StudyMaterials /> </StudentAuth> 
             },                              // tutor auth pages
             {                        
                 path : 'create-session', 
-                Component : CreateSession 
+                element :<TutorAuth> <CreateSession /> </TutorAuth>   
             },
             {                        
                 path : 'my-sessions', 
-                Component : MySessions 
+                element : <TutorAuth> <MySessions />  </TutorAuth> 
             },
             {                        
                 path : 'upload-materials', 
-                Component : UploadMaterials 
+                element : <TutorAuth> <UploadMaterials /> </TutorAuth> 
             },
             {                        
                 path : 'materials', 
-                Component : MyMatetials 
+                element : <TutorAuth> <MyMatetials /> </TutorAuth>  
             },
             {                           // admin auth pages                    
                 path : 'manage-users', 
-                Component : ManageUsers 
+                element : <AdminAuth> <ManageUsers /> </AdminAuth> 
             },
             {                        
                 path : 'manage-sessions', 
-                Component : ManageSessions 
+                element : <AdminAuth > <ManageSessions /> </AdminAuth> 
             },
             {                        
                 path : 'manage-materials', 
-                Component : ManageMaterials
+                element : <AdminAuth> <ManageMaterials /> </AdminAuth>
             },
             {                        
                 path : 'manage-tutors', 
-                Component : ManageTutors
+                element : <AdminAuth> <ManageTutors /> </AdminAuth>
             },
 
 

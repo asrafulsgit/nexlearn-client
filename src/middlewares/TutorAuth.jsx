@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { AuthContext } from '../controllers/AuthProvider';
+import { Navigate } from 'react-router';
 
-const TutorAuth = () => {
-    const [isTutor,setIsTutor] = useState(false) 
-  return (<></>)
+const TutorAuth = ({children}) => {
+ const {isLoggedIn, userInfo} = useContext(AuthContext);
+  return (isLoggedIn && userInfo?.role === 'tutor' ? children : <Navigate to='/login' />)
+
 }
 
-export default TutorAuth
+export default TutorAuth;

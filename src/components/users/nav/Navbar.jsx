@@ -1,11 +1,14 @@
 import { useState, useEffect, useRef, useContext } from "react";
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router";
 
 import "./navbar.css";
 import logoImage1 from "../../../assets/logo1.png";
 import { AuthContext } from "../../../controllers/AuthProvider";
+import { apiRequiestWithCredentials } from "../../../utilities/handleApis";
+import { toast } from "react-toastify";
 const Navbar = () => {
-  const { isLoggedIn, userInfo } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const { isLoggedIn, userInfo,setLoading,setUserInfo,setIsLoggedIn } = useContext(AuthContext);
   
 
   const [isOpen, setIsOpen] = useState(false);
@@ -18,9 +21,20 @@ const Navbar = () => {
     setIsOpen(false);
   };
 
-  const handleLogout = () => {
-    
-  };
+  const handleLogout = async()=>{
+      setLoading(true)
+        try {
+          await apiRequiestWithCredentials('get','/user/logout');
+          setUserInfo(null)
+          setIsLoggedIn(false)
+          setLoading(false)
+          navigate('/login')
+          toast.success('User logout successfull')
+        } catch (error) {
+          setLoading(false)
+          toast.error(error?.response?.data?.message)
+        }
+    }
 
   // Close mobile menu on window resize
   useEffect(() => {

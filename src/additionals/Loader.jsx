@@ -1,11 +1,10 @@
 import React, { useContext } from 'react'
-// import Lottie from 'lottie-react'
-// import animation from '../../../public/loader.json'
+import loaderImage from '../assets/loader.svg'
 const Loader = () => {
    
   return (
     <div className={`w-[100%] h-[100vh]  bg-white flex justify-center items-center`}>
-      {/* <Lottie animationData={animation} loop={true} style={{ height: 250, width: 350  }}/> */}
+       <img src={loaderImage} alt="loading" className='w-18 h-18' />
     </div>
   )
 }

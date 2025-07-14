@@ -42,23 +42,21 @@ const AuthProvider = ({children})=>{
         }
       }
       
-      // const userObserver=async()=>{
-      //     try {
-      //       const data = await apiRequiestWithCredentials('get','/user/observer');
-      //       setUserInfo(data?.user)
-             
-      //       setIsLoggedIn(true)
-      //       setLoading(false)
-      //     } catch (error) {
-      //       setIsLoggedIn(false)
-      //       setUserInfo(null)
-      //       setLoading(false)
-            
-      //     }
-      // }
+      const userObserver=async()=>{
+          try {
+            const data = await apiRequiestWithCredentials('get','/user/observer');
+            setUserInfo(data?.user)
+            setIsLoggedIn(true)
+            setLoading(false)
+          } catch (error) {
+            setIsLoggedIn(false)
+            setUserInfo(null)
+            setLoading(false)
+          }
+      }
       
       useEffect(() => {
-        // userObserver()
+        userObserver()
       }, []);
     
     return(

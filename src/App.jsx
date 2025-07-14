@@ -1,11 +1,17 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Navbar from './components/users/nav/Navbar'
 import { Outlet } from 'react-router'
 import Footer from './components/users/footer/Footer'
 import Toastify from './additionals/Toastify'
 import ScrollVehaviour from './additionals/ScrollVehaviour'
+import { AuthContext } from './controllers/AuthProvider'
+import Loader from './additionals/Loader'
 
 const App = () => {
+     const {loading} = useContext(AuthContext);
+     if(loading){
+      return <Loader />
+     }
   return (
     <>
       <ScrollVehaviour />
