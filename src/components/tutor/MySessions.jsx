@@ -11,7 +11,7 @@ import { queryClient } from "../../utilities/queryclient";
 const MySessions = () => {
   const [sessions, setSessions] = useState([]);
   const [selectedReason, setSelectedReason] = useState(null);
-  console.log(selectedReason)
+   
   const {data, isPending, isError, error} = useQuery({
     queryKey: ['tsessions'],
     queryFn: () => apiRequiestWithCredentials('get', '/sessions/tutor'),
@@ -23,8 +23,9 @@ const MySessions = () => {
     setSessions(data.sessions);
   }
 }, [data]);
+
   if(isPending){
-    return  <Loader />
+    return  <Loader />;
   }
   
   if(isError){
@@ -32,21 +33,19 @@ const MySessions = () => {
   }
 // sessions/tutor/re-submit/:sessionId
   const handleResubmit = async(id) => {
+
      try {
-         await apiRequiestWithCredentials("put", `sessions/tutor/re-submit/${id}`);
-         
+         await apiRequiestWithCredentials("put", `/sessions/tutor/re-submit/${id}`);
          await queryClient.invalidateQueries({ queryKey: ['tsessions'] });
          toast.success("Approval request sent successfully!");
        } catch (err) {
         console.log(err)
-         toast.error("Failed to Approval request");
+        toast.error("Failed to Approval request");
        } 
   };
 
 
  
- 
-
   return (
     <section className="min-h-[70vh] max-w-7xl mx-auto px-4 py-10">
       <h2 className="text-3xl font-bold mb-2 text-gray-800">My Study Sessions</h2>

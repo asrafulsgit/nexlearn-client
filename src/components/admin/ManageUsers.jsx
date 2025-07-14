@@ -40,11 +40,10 @@ const confirmRoleChange = async() => {
     setNewRole('')
     await queryClient.invalidateQueries({ queryKey: ['users'] });
     toast.success("Role updated");
+    setIsModalOpen(false);
   } catch (err) {
     toast.error("Failed to update role");
-  } finally {
-    setIsModalOpen(false);
-  }
+  } 
    
 };
 

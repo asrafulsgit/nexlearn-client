@@ -1,4 +1,10 @@
-import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import React, { useEffect, useState } from "react";
+import { apiRequiestWithCredentials } from "../../utilities/handleApis";
+import Loader from "../../additionals/Loader";
+import { dateFormat } from "../../utilities/dateFormate";
+import { queryClient } from "../../utilities/queryclient";
+import { toast } from "react-toastify";
 
 const dummySessions = [
   {
@@ -20,15 +26,41 @@ const tutorEmail = "tutor@example.com";
 const UploadMaterials = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedSession, setSelectedSession] = useState(null);
-  const [formData, setFormData] = useState({
+  const initFormData = {
     title: "",
-    imageUrl: "",
+    image: "",
     driveLink: "",
-  });
+  }
+  const [formData, setFormData] = useState(initFormData);
 
+  const [sessions,setSessions]=useState([])
+  
+  // get sessions
+  const {data, isPending, isError, error} = useQuery({
+    queryKey: ['tsessions'],
+    queryFn: () => apiRequiestWithCredentials('get', '/sessions/tutor/approve'),
+    refetchOnWindowFocus: true,
+    refetchOnMount: true
+  });
+  useEffect(() => {
+  if (data?.sessions) {
+    setSessions(data.sessions);
+  }
+}, [data]);
+
+  if(isPending){
+    return  <Loader />;
+  }
+  
+  if(isError){
+    toast.error(error?.response?.data?.message)
+  }
+
+
+  // model settings
   const openModal = (session) => {
     setSelectedSession(session);
-    setFormData({ title: "", imageUrl: "", driveLink: "" });
+    setFormData({ title: "", image: "", driveLink: "" });
     setModalOpen(true);
   };
 
@@ -36,17 +68,24 @@ const UploadMaterials = () => {
     setModalOpen(false);
     setSelectedSession(null);
   };
-
+  // update settings
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    alert(
-      `Uploading material for session ${selectedSession.id}:\nTitle: ${formData.title}\nImage URL: ${formData.imageUrl}\nDrive Link: ${formData.driveLink}`
-    );
-    closeModal();
+     try {
+      await apiRequiestWithCredentials("post", `/materials/tutor/${selectedSession._id}`, formData);
+      await queryClient.invalidateQueries({ queryKey: ['tsessions'] });
+        setSelectedSession(null);
+        setFormData(initFormData);
+        toast.success("Material uploaded.");
+        closeModal();
+      } catch (err) {
+        console.log(err)
+        toast.error("Failed to upload material");
+      } 
   };
 
   return (
@@ -67,9 +106,9 @@ const UploadMaterials = () => {
           </tr>
         </thead>
         <tbody>
-          {dummySessions.map((session) => (
+          {sessions?.map((session) => (
             <tr
-              key={session.id}
+              key={session?._id}
               className="border-b border-gray-200 hover:bg-gray-50"
             >
                <td className="px-4 py-3">
@@ -79,9 +118,9 @@ const UploadMaterials = () => {
                     className="w-16 h-16 object-cover rounded"
                   />
                 </td>
-              <td className="px-4 py-3">{session.title}</td>
-              <td className="px-4 py-3">{session.startDate}</td>
-              <td className="px-4 py-3">{session.endDate}</td>
+              <td className="px-4 py-3">{session?.title}</td>
+              <td className="px-4 py-3">{dateFormat(session?.classStart)}</td>
+              <td className="px-4 py-3">{dateFormat(session?.classEnd)}</td>
               <td className="px-4 py-3 text-center">
                 <button
                   onClick={() => openModal(session)}
@@ -132,16 +171,16 @@ const UploadMaterials = () => {
               </div>
               <div>
                 <label
-                  htmlFor="imageUrl"
+                  htmlFor="image"
                   className="block text-gray-700 font-medium mb-1"
                 >
                   Image URL
                 </label>
                 <input
                   type="text"
-                  id="imageUrl"
-                  name="imageUrl"
-                  value={formData.imageUrl}
+                  id="image"
+                  name="image"
+                  value={formData.image}
                   onChange={handleChange}
                   placeholder="Paste image URL here"
                   className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-600"
@@ -178,7 +217,7 @@ const UploadMaterials = () => {
                   type="text"
                   id="sessionId"
                   name="sessionId"
-                  value={selectedSession.id}
+                  value={selectedSession?._id}
                   readOnly
                   className="focus:outline-none text-gray-600 w-full bg-gray-100 border border-gray-300 rounded px-3 py-2"
                 />
