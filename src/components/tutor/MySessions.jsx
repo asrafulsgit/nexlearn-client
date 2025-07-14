@@ -1,44 +1,30 @@
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { apiRequiestWithCredentials } from "../../utilities/handleApis";
+import Loader from "../../additionals/Loader";
+import { toast } from "react-toastify";
+import { dateFormat } from "../../utilities/dateFormate";
 
-// Dummy session data (replace with real API data later)
-const dummySessions = [
-  {
-    id: "1",
-    title: "Advanced JavaScript",
-    image: "https://i.ibb.co/BB0WRD5/session1.jpg",
-    registrationStart: "2025-07-01",
-    registrationEnd: "2025-07-10",
-    classStart: "2025-07-15",
-    classEnd: "2025-08-15",
-    status: "approved",
-  },
-  {
-    id: "2",
-    title: "React for Beginners",
-    image: "https://i.ibb.co/qdD3FxZ/session2.jpg",
-    registrationStart: "2025-07-05",
-    registrationEnd: "2025-07-12",
-    classStart: "2025-07-20",
-    classEnd: "2025-08-10",
-    status: "rejected",
-    rejectionReason: "Content not aligned with syllabus",
-    feedback: "Please revise the course outline to focus more on core React topics.",
-  },
-  {
-    id: "3",
-    title: "Node.js Masterclass",
-    image: "https://i.ibb.co/tbWwrRw/session3.jpg",
-    registrationStart: "2025-07-03",
-    registrationEnd: "2025-07-11",
-    classStart: "2025-07-18",
-    classEnd: "2025-08-12",
-    status: "pending",
-  },
-];
+
 
 const MySessions = () => {
-  const [sessions, setSessions] = useState(dummySessions);
+  const [sessions, setSessions] = useState([]);
   const [selectedReason, setSelectedReason] = useState(null);
+  
+  const {data, isPending, isError, error} = useQuery({
+    queryKey: ['sessions'],
+    queryFn: () => apiRequiestWithCredentials('get', '/sessions/tutor'),
+    refetchOnWindowFocus: true,
+    refetchOnMount: true
+  });
+  
+  if(isPending){
+    return  <Loader />
+  }
+  
+  if(isError){
+    toast.error(error?.response?.data?.message)
+  }
 
   const handleResubmit = (id) => {
     const updated = sessions.map((session) =>
@@ -47,6 +33,10 @@ const MySessions = () => {
     setSessions(updated);
     alert("Approval request sent successfully!");
   };
+
+
+ 
+ 
 
   return (
     <section className="min-h-[70vh] max-w-7xl mx-auto px-4 py-10">
@@ -66,24 +56,24 @@ const MySessions = () => {
             </tr>
           </thead>
           <tbody>
-            {sessions.map((session, index) => (
-              <tr key={session.id} className="border-b border-gray-300">
+            {data?.sessions?.map((session, index) => (
+              <tr key={index} className="border-b border-gray-300">
                 <td className="px-6 py-4">
                   <img
-                    src={session.image}
-                    alt={session.title}
+                    src={session?.image}
+                    alt={session?.title}
                     className="w-16 h-16 object-cover rounded"
                   />
                 </td>
-                <td className="px-6 py-4 font-medium text-gray-900">{session.title}</td>
+                <td className="px-6 py-4 font-medium text-gray-900">{session?.title}</td>
                 <td className="px-6 py-4 text-gray-700">
-                  {session.registrationStart} → {session.registrationEnd}
+                  {dateFormat(session?.registrationStart)} → {dateFormat(session?.registrationEnd)}
                 </td>
                 <td className="px-6 py-4 text-gray-700">
-                  {session.classStart} → {session.classEnd}
+                  {dateFormat(session?.classStart)  } → {dateFormat(session?.classEnd)}
                 </td>
                 <td className="px-6 py-4">
-                  {session.status === "approved" && (
+                  {session?.status === "approved" && (
                     <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs">
                       Approved
                     </span>
@@ -93,17 +83,17 @@ const MySessions = () => {
                       Rejected
                     </span>
                   )}
-                  {session.status === "pending" && (
+                  {session?.status === "pending" && (
                     <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs">
                       Pending
                     </span>
                   )}
                 </td>
                 <td className="px-6 py-4 space-x-2">
-                  {session.status === "rejected" ? (
+                  {session?.status === "rejected" ? (
                     <>
                       <button
-                        onClick={() => handleResubmit(session.id)}
+                        onClick={() => handleResubmit(session?._id)}
                         className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs"
                       >
                         Send New Request
