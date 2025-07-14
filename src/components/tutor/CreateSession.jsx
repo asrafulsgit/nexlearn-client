@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { AuthContext } from "../../controllers/AuthProvider";
+import { apiRequiestWithCredentials } from "../../utilities/handleApis";
+import { toast } from "react-toastify";
 
 const CreateSession = () => {
-  const [formData, setFormData] = useState({
+  const {userInfo} = useContext(AuthContext);
+  const initFormData = {
     title: "",
     description: "",
     image: "",
@@ -12,19 +16,31 @@ const CreateSession = () => {
     duration: "",
     registrationFee: 0,
     status: "Pending",
-    tutorName: "John Doe", // Replace with logged-in user name
-    tutorEmail: "john@example.com", // Replace with logged-in user email
-  });
-
+    tutor :{
+      name : userInfo.name,
+      email :  userInfo.email
+    }  
+  }
+  const [formData, setFormData] = useState(initFormData);
+  const [postLoading,setPostLoading]=useState(false)
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit =async(e) => {
     e.preventDefault();
-    console.log("Submitted:", formData);
-    alert("Session created successfully (dummy logic)!");
+    setPostLoading(true);
+    try {
+      await apiRequiestWithCredentials('post','/sessions/tutor',formData)
+      setFormData(initFormData)
+      toast.success('Session created.')
+      } catch (error) {
+        console.log(error)
+        toast.error(error?.response?.data?.message)
+    }finally{
+      setPostLoading(false)
+    }
   };
 
   return (
@@ -74,6 +90,7 @@ const CreateSession = () => {
               <input
                 type="date"
                 name="registrationStart"
+                value={formData?.registrationStart}
                 onChange={handleChange}
                 className="w-full p-3 rounded border border-gray-300"
                 required
@@ -84,6 +101,7 @@ const CreateSession = () => {
               <input
                 type="date"
                 name="registrationEnd"
+                value={formData?.registrationEnd}
                 onChange={handleChange}
                 className="w-full p-3 rounded border border-gray-300"
                 required
@@ -95,8 +113,9 @@ const CreateSession = () => {
             <div>
               <label className="block font-medium mb-1">Class Start Date</label>
               <input
-                type="datetime-local"
+                type="date"
                 name="classStart"
+                value={formData?.classStart}
                 onChange={handleChange}
                 className="w-full p-3 rounded border border-gray-300"
                 required
@@ -105,8 +124,9 @@ const CreateSession = () => {
             <div>
               <label className="block font-medium mb-1">Class End Date</label>
               <input
-                type="datetime-local"
+                type="date"
                 name="classEnd"
+                value={formData?.classEnd}
                 onChange={handleChange}
                 className="w-full p-3 rounded border border-gray-300"
                 required
@@ -117,6 +137,7 @@ const CreateSession = () => {
           <div>
             <label className="block font-medium mb-1">Session Duration</label>
             <input
+              type = "text"
               name="duration"
               onChange={handleChange}
               value={formData.duration}
@@ -132,7 +153,8 @@ const CreateSession = () => {
                 name="registrationFee"
                 value={formData.registrationFee}
                 readOnly
-                className="w-full p-3 rounded border border-gray-200 bg-gray-100 text-gray-600"
+                className="w-full p-3 rounded border border-gray-200
+                 bg-gray-100 text-gray-600 focus:outline-none"
               />
             </div>
             <div>
@@ -141,16 +163,16 @@ const CreateSession = () => {
                 name="status"
                 value={formData.status}
                 readOnly
-                className="w-full p-3 rounded border border-gray-200 bg-gray-100 text-gray-600"
+                className="w-full p-3 rounded border focus:outline-none border-gray-200 bg-gray-100 text-gray-600"
               />
             </div>
             <div>
               <label className="block font-medium mb-1">Tutor Name</label>
               <input
                 name="tutorName"
-                value={formData.tutorName}
+                value={formData?.tutor?.name}
                 readOnly
-                className="w-full p-3 rounded border border-gray-200 bg-gray-100 text-gray-600"
+                className="w-full p-3 rounded border focus:outline-none border-gray-200 bg-gray-100 text-gray-600"
               />
             </div>
           </div>
@@ -159,9 +181,9 @@ const CreateSession = () => {
             <label className="block font-medium mb-1">Tutor Email</label>
             <input
               name="tutorEmail"
-              value={formData.tutorEmail}
+              value={formData?.tutor?.email}
               readOnly
-              className="w-full p-3 rounded border border-gray-200 bg-gray-100 text-gray-600"
+              className="w-full focus:outline-none p-3 rounded border border-gray-200 bg-gray-100 text-gray-600"
             />
           </div>
 
@@ -169,7 +191,7 @@ const CreateSession = () => {
             type="submit"
             className="w-full py-3 px-6 bg-green-600 text-white font-bold rounded hover:bg-green-700 transition"
           >
-            Create Session
+            {postLoading ? 'Creating...' : 'Create Session'}
           </button>
         </form>
       </div>
