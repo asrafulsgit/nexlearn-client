@@ -1,36 +1,28 @@
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { apiRequiestWithCredentials } from "../../utilities/handleApis";
+import Loader from "../../additionals/Loader";
+import { toast } from "react-toastify";
+import { queryClient } from "../../utilities/queryclient";
 
-const dummyUsers = [
-  {
-    id: 1,
-    name: "Ayesha Rahman",
-    email: "ayesha@student.com",
-    image: "https://i.pravatar.cc/100?img=1",
-    role: "student",
-  },
-  {
-    id: 2,
-    name: "Tariq Hossain",
-    email: "tariq@tutor.com",
-    image: "https://i.pravatar.cc/100?img=2",
-    role: "tutor",
-  },
-  {
-    id: 3,
-    name: "Nadia Islam",
-    email: "nadia@admin.com",
-    image: "https://i.pravatar.cc/100?img=3",
-    role: "admin",
-  },
-];
+
 
 const ManageUsers = () => {
   
-  const [users, setUsers] = useState(dummyUsers);
+  const [users, setUsers] = useState([]);
 
   const [selectedUser, setSelectedUser] = useState(null);
   const [newRole, setNewRole] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+
+  const {data, isPending, isError, error} = useQuery({
+    queryKey: ['users'],
+    queryFn: () => apiRequiestWithCredentials('get', '/admin/users')
+  });
+
+  
+ 
 
   const handleRoleChange = (user, role) => {
   setSelectedUser(user);
@@ -38,12 +30,21 @@ const ManageUsers = () => {
   setIsModalOpen(true);
 };
 
-const confirmRoleChange = () => {
-  const updatedUsers = users.map((u) =>
-    u.id === selectedUser.id ? { ...u, role: newRole } : u
-  );
-  setUsers(updatedUsers);
-  setIsModalOpen(false);
+
+const confirmRoleChange = async() => { 
+   try {
+    await apiRequiestWithCredentials("put", `/admin/user/${selectedUser._id}/role`, {
+      newRole
+    });
+    setSelectedUser(null);
+    setNewRole('')
+    await queryClient.invalidateQueries({ queryKey: ['users'] });
+    toast.success("Role updated");
+  } catch (err) {
+    toast.error("Failed to update role");
+  } finally {
+    setIsModalOpen(false);
+  }
    
 };
 
@@ -51,17 +52,20 @@ const confirmRoleChange = () => {
 // search and filter functionality
   const [searchTerm, setSearchTerm] = useState("");
   const [subjectFilter, setSubjectFilter] = useState("");
-
-  // const filteredTutors = users.filter(tutor => {
-  //   const matchesSearch = tutor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //     tutor.subject.toLowerCase().includes(searchTerm.toLowerCase());
-  //   const matchesSubject = subjectFilter ? tutor.subject.toLowerCase() === subjectFilter.toLowerCase() : true;
-  //   return matchesSearch && matchesSubject;
-  // });
-
-  // const uniqueSubjects = [...new Set(tutorsData.map(t => t.subject))];
-
-
+    
+    
+  useEffect(() => {
+  if (data?.users) {
+    setUsers(data.users);
+  }
+}, [data]);
+  
+if(isPending){
+    return <Loader />;
+  }
+  if(isError){
+    return toast.error(error?.response?.data?.message);
+  }
   return (
    <> 
    <div className="max-w-7xl mx-auto px-4 min-h-[80vh]">
@@ -115,37 +119,32 @@ const confirmRoleChange = () => {
             </tr>
           </thead>
           <tbody>
-            {users
-              .filter((user) =>
-                user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                user.email.toLowerCase().includes(searchTerm.toLowerCase())
-              )
-              .map((user) => (
-                <tr key={user.id} className="border-b border-gray-200">
-                  <td className="px-4 py-3">
-                    <img
-                      src={user.image}
-                      alt={user.name}
-                      className="w-10 h-10 rounded-full"
-                    />
-                  </td>
-                  <td className="px-4 py-3 font-medium text-gray-800">{user.name}</td>
-                  <td className="px-4 py-3 text-gray-600">{user.email}</td>
-                  <td className="px-4 py-3">
-                    <select
-  value={user.role}
-  onChange={(e) => handleRoleChange(user, e.target.value)}
-  className="border border-gray-300 px-3 py-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
->
-  <option value="student">Student</option>
-  <option value="tutor">Tutor</option>
-  <option value="admin">Admin</option>
-</select>
+  {users.map((user) => (
+    <tr key={user._id || user.id} className="border-b border-gray-200">
+      <td className="px-4 py-3">
+        <img
+          src={user.avatar || "https://via.placeholder.com/40"}
+          alt={user.name}
+          className="w-10 h-10 rounded-full"
+        />
+      </td>
+      <td className="px-4 py-3 font-medium text-gray-800">{user.name}</td>
+      <td className="px-4 py-3 text-gray-600">{user.email}</td>
+      <td className="px-4 py-3">
+        <select
+          value={user.role}
+          onChange={(e) => handleRoleChange(user, e.target.value)}
+          className="border border-gray-300 px-3 py-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+        >
+          <option value="student">Student</option>
+          <option value="tutor">Tutor</option>
+          <option value="admin">Admin</option>
+        </select>
+      </td>
+    </tr>
+  ))}
+</tbody>
 
-                  </td>
-                </tr>
-              ))}
-          </tbody>
         </table>
 
         {users.length === 0 && (

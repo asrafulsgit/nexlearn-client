@@ -4,20 +4,25 @@ import { apiRequiestWithCredentials } from "../../utilities/handleApis";
 import Loader from "../../additionals/Loader";
 import { toast } from "react-toastify";
 import { dateFormat } from "../../utilities/dateFormate";
+import { queryClient } from "../../utilities/queryclient";
 
 
 
 const MySessions = () => {
   const [sessions, setSessions] = useState([]);
   const [selectedReason, setSelectedReason] = useState(null);
-  
+  console.log(selectedReason)
   const {data, isPending, isError, error} = useQuery({
-    queryKey: ['sessions'],
+    queryKey: ['tsessions'],
     queryFn: () => apiRequiestWithCredentials('get', '/sessions/tutor'),
     refetchOnWindowFocus: true,
     refetchOnMount: true
   });
-  
+  useEffect(() => {
+  if (data?.sessions) {
+    setSessions(data.sessions);
+  }
+}, [data]);
   if(isPending){
     return  <Loader />
   }
@@ -25,13 +30,17 @@ const MySessions = () => {
   if(isError){
     toast.error(error?.response?.data?.message)
   }
-
-  const handleResubmit = (id) => {
-    const updated = sessions.map((session) =>
-      session.id === id ? { ...session, status: "pending" } : session
-    );
-    setSessions(updated);
-    alert("Approval request sent successfully!");
+// sessions/tutor/re-submit/:sessionId
+  const handleResubmit = async(id) => {
+     try {
+         await apiRequiestWithCredentials("put", `sessions/tutor/re-submit/${id}`);
+         
+         await queryClient.invalidateQueries({ queryKey: ['tsessions'] });
+         toast.success("Approval request sent successfully!");
+       } catch (err) {
+        console.log(err)
+         toast.error("Failed to Approval request");
+       } 
   };
 
 
@@ -56,11 +65,11 @@ const MySessions = () => {
             </tr>
           </thead>
           <tbody>
-            {data?.sessions?.map((session, index) => (
+            {sessions?.map((session, index) => (
               <tr key={index} className="border-b border-gray-300">
                 <td className="px-6 py-4">
                   <img
-                    src={session?.image}
+                    src={session?.image || ''}
                     alt={session?.title}
                     className="w-16 h-16 object-cover rounded"
                   />

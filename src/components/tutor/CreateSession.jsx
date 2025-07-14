@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from "../../controllers/AuthProvider";
 import { apiRequiestWithCredentials } from "../../utilities/handleApis";
 import { toast } from "react-toastify";
+import { queryClient } from "../../utilities/queryclient";
 
 const CreateSession = () => {
   const {userInfo} = useContext(AuthContext);
@@ -33,6 +34,7 @@ const CreateSession = () => {
     setPostLoading(true);
     try {
       await apiRequiestWithCredentials('post','/sessions/tutor',formData)
+      queryClient.invalidateQueries({ queryKey: ['tsessions'] });
       setFormData(initFormData)
       toast.success('Session created.')
       } catch (error) {

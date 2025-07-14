@@ -1,76 +1,88 @@
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { apiRequiestWithCredentials } from "../../utilities/handleApis";
+import Loader from "../../additionals/Loader";
+import { toast } from "react-toastify";
+import { queryClient } from "../../utilities/queryclient";
 
 const ManageSessions = () => {
-  const [sessions, setSessions] = useState([
-    {
-      id: 1,
-      title: "Math Basics",
-      tutor: "Alice Johnson",
-      status: "pending",
-      fee: 0,
-    },
-    {
-      id: 2,
-      title: "English Writing",
-      tutor: "John Smith",
-      status: "approved",
-      fee: 10,
-    },
-  ]);
-
+  const [sessions, setSessions] = useState([]);
   const [selectedSession, setSelectedSession] = useState(null);
-  const [approvalModal, setApprovalModal] = useState(false);
-  const [editModal, setEditModal] = useState(false);
-  const [rejectionModal, setRejectionModal] = useState(false);
-
   const [fee, setFee] = useState("");
-  const [editData, setEditData] = useState({ fee: 0 });
+  
 
-  const [rejectionReason, setRejectionReason] = useState("");
-  const [rejectionFeedback, setRejectionFeedback] = useState("");
-
+  // get all pending sessions
+  const {data, isPending, isError, error} = useQuery({
+    queryKey: ['sessions'],
+    queryFn: () => apiRequiestWithCredentials('get', '/sessions/admin')
+  });
+  useEffect(() => {
+    if (data?.sessions) {
+      setSessions(data.sessions);
+    }
+  }, [data]);
+  
+   // approve  setting
+   const [approvalModal, setApprovalModal] = useState(false);
+  
   const handleApprove = (session) => {
     setSelectedSession(session);
     setFee(session.fee || 0);
     setApprovalModal(true);
   };
+  // console.log(data?.sessions)
+  const confirmApprove = async() => {
+    try {
+        await apiRequiestWithCredentials("put", `/sessions/admin/approve/${selectedSession._id}`,{fee});
+        setSelectedSession(null);
+        setFee("");
+        await queryClient.invalidateQueries({ queryKey: ['sessions'] });
+        toast.success("Session approved.");
+        setApprovalModal(false);
+      } catch (err) {
+        toast.error("Failed to approve session.");
+      } 
 
-  const confirmApprove = () => {
-    const updated = sessions.map((s) =>
-      s.id === selectedSession.id
-        ? { ...s, status: "approved", fee: parseFloat(fee) || 0 }
-        : s
-    );
-    setSessions(updated);
-    setApprovalModal(false);
-    setSelectedSession(null);
-    setFee("");
+    
+    
   };
 
+  // rejection  setting
+  const [rejectionModal, setRejectionModal] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState("");
+  const [rejectionFeedback, setRejectionFeedback] = useState("");
   const handleReject = (session) => {
     setSelectedSession(session);
     setRejectionModal(true);
   };
 
-  const confirmReject = () => {
-    const filtered = sessions.filter((s) => s.id !== selectedSession.id);
-    console.log("Rejected session:", {
-      id: selectedSession.id,
-      reason: rejectionReason,
-      feedback: rejectionFeedback,
-    });
-    setSessions(filtered);
-    setRejectionModal(false);
-    setSelectedSession(null);
-    setRejectionReason("");
-    setRejectionFeedback("");
+  const confirmReject = async(e) => {
+    e.preventDefault();
+    if(!rejectionReason.trim()){
+      toast.error("Rejection reason required.");
+      return;
+    }
+    try {
+        await apiRequiestWithCredentials("put", `/sessions/admin/reject/${selectedSession._id}`,{rejectionReason,rejectionFeedback});
+        setSelectedSession(null);
+        setRejectionReason("");
+        setRejectionFeedback("");
+        await queryClient.invalidateQueries({ queryKey: ['sessions'] });
+        toast.success("Session rejected.");
+        setRejectionModal(false);
+      } catch (err) {
+        toast.error("Failed to reject session.");
+      } 
   };
-
+  // delete model setting
   const handleDelete = (id) => {
     const filtered = sessions.filter((s) => s.id !== id);
     setSessions(filtered);
   };
 
+  // edit model setting
+  const [editModal, setEditModal] = useState(false);
+  const [editData, setEditData] = useState({ fee: 0 });
   const handleEdit = (session) => {
     setEditData({ fee: session.fee });
     setSelectedSession(session);
@@ -87,6 +99,15 @@ const ManageSessions = () => {
     setEditModal(false);
     setSelectedSession(null);
   };
+
+
+    
+if(isPending){
+    return <Loader />;
+  }
+  if(isError){
+    return toast.error(error?.response?.data?.message);
+  }
 
   return (
     <>
@@ -109,15 +130,15 @@ const ManageSessions = () => {
             </thead>
             <tbody>
               {sessions.map((session) => (
-                <tr key={session.id} className="border-t border-gray-200 hover:bg-gray-50">
-                  <td className="px-4 py-3">{session.title}</td>
-                  <td className="px-4 py-3">{session.tutor}</td>
-                  <td className="px-4 py-3 capitalize">{session.status}</td>
+                <tr key={session?._id} className="border-t border-gray-200 hover:bg-gray-50">
+                  <td className="px-4 py-3">{session?.title}</td>
+                  <td className="px-4 py-3">{session?.tutor?.name}</td>
+                  <td className="px-4 py-3 capitalize">{session?.status}</td>
                   <td className="px-4 py-3">
-                    {session.fee === 0 ? "Free" : `$${session.fee}`}
+                    {session?.fee === 0 ? "Free" : `$${session?.fee}`}
                   </td>
                   <td className="px-4 py-3 space-x-2">
-                    {session.status === "pending" ? (
+                    {session?.status === "pending" ? (
                       <>
                         <button
                           onClick={() => handleApprove(session)}
@@ -141,7 +162,7 @@ const ManageSessions = () => {
                           Update
                         </button>
                         <button
-                          onClick={() => handleDelete(session.id)}
+                          onClick={() => handleDelete(session?._id)}
                           className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
                         >
                           Delete
@@ -228,6 +249,7 @@ const ManageSessions = () => {
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-full max-w-md">
             <h3 className="text-xl font-semibold mb-4 text-red-600">Reject Session</h3>
+            <form action="" onSubmit={confirmReject}> 
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Rejection Reason
             </label>
@@ -237,6 +259,7 @@ const ManageSessions = () => {
               onChange={(e) => setRejectionReason(e.target.value)}
               placeholder="Enter reason"
               className="w-full mb-4 border px-4 py-2 rounded"
+              required
             />
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Feedback (Optional)
@@ -256,12 +279,14 @@ const ManageSessions = () => {
                 Cancel
               </button>
               <button
+                type="submit"
                 className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded"
-                onClick={confirmReject}
+                
               >
                 Confirm Reject
               </button>
             </div>
+            </form>
           </div>
         </div>
       )}
