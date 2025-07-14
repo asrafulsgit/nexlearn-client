@@ -83,7 +83,7 @@ const ManageSessions = () => {
         toast.success("Session deleted.");
       } catch (err) {
         console.log(err)
-        toast.error("Failed to deleted session.");
+        toast.error("Failed to delete session.");
       } 
    
   };

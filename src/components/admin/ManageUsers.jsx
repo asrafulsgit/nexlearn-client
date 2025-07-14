@@ -16,7 +16,7 @@ const ManageUsers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
 
-  const {data, isPending, isError, error} = useQuery({
+  const {data, isPending, isError, error, refetch} = useQuery({
     queryKey: ['users'],
     queryFn: () => apiRequiestWithCredentials('get', '/admin/users'),
     refetchOnMount: 'always'
@@ -49,11 +49,76 @@ const confirmRoleChange = async() => {
 };
 
 
-// search and filter functionality
+const refetchFunction = async()=>{
+const result = await refetch(); 
+
+   
+    if (result.data?.users) {
+      setUsers(result.data.users);
+    }
+}
+
+// search functionality  
   const [searchTerm, setSearchTerm] = useState("");
-  const [subjectFilter, setSubjectFilter] = useState("");
+  
+
+  const handleSearch = (value)=>{
+    setSearchTerm(value)
+    searchFunctionality(value.trim())
+  }
+
+  const [filterLoading,setFilterLoading] = useState(false);
+
+  let interval;
+     const searchFunctionality=async(searchValue)=>{ 
+      clearTimeout(interval)
+      if (!searchValue) {
+    refetchFunction()
     
+    return;
+  }
+       setFilterLoading(true)
+  
+         interval = setTimeout(async() => {
+          
+         try {
+           const data = await apiRequiestWithCredentials('get',`/admin/users/search?name=${searchValue}`)
+           setUsers(data?.users)
     
+           } catch (error) {
+             setUsers([])
+             toast.error(error?.response?.data?.message)
+             
+           }finally{
+            setFilterLoading(false)
+           }
+        }, 1000); 
+     }
+
+//  filter functionality
+const [filter,setFilter]=useState('');
+const handleFilter = async(value)=>{
+  setFilter(value);
+
+  if(!value.trim()){
+    refetchFunction();
+    return;
+  }
+  setFilterLoading(true)
+  try {
+           const data = await apiRequiestWithCredentials('get',`/admin/users/filter?role=${value}`)
+           setUsers(data?.users)
+          
+           } catch (error) {
+             setUsers([])
+             toast.error(error?.response?.data?.message)
+             
+           }finally{
+            setFilterLoading(false)
+           }
+}
+
+// others
   useEffect(() => {
   if (data?.users) {
     setUsers(data.users);
@@ -83,7 +148,7 @@ if(isPending){
             <input
               type="text"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => handleSearch(e.target.value)}
               placeholder="Search by name..."
               className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 
               focus:outline-none focus:ring-2 focus:ring-green-600 text-gray-700 placeholder-gray-400"
@@ -96,19 +161,20 @@ if(isPending){
           </div>
 
           <select
-            value={subjectFilter}
-            onChange={(e) => setSubjectFilter(e.target.value)}
+            value={filter}
+            onChange={(e) => handleFilter(e.target.value)}
             className="w-full lg:w-1/3 px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
           >
-            <option value="">Filter by role</option>
+            <option value="" disabled>Filter by role</option>
             <option value="student">Student</option>
             <option value="tutor">Tutor</option>
             <option value="admin">Admin</option>
+            <option value="">All</option>
           </select>
         </div>
 
       {/* Users Table */}
-      <div className="overflow-x-auto bg-white rounded-lg shadow">
+    {!filterLoading ?  <div className="overflow-x-auto bg-white rounded-lg shadow">
         <table className="w-full table-auto">
           <thead className="bg-green-600 text-white">
             <tr>
@@ -150,7 +216,12 @@ if(isPending){
         {users.length === 0 && (
           <div className="p-6 text-center text-gray-500">No users found</div>
         )}
+      </div> : 
+
+      <div className="min-h-[10vh] w-full flex justify-center items-center">
+          <p className="text-green-600">Loading...</p>
       </div>
+      }
     </div>
 
 

@@ -1,4 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Loader from "../../additionals/Loader";
+import { toast } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
+import { apiRequiestWithCredentials } from "../../utilities/handleApis";
+import { queryClient } from "../../utilities/queryclient";
 
 const initMetials =[
     {
@@ -19,15 +24,45 @@ const initMetials =[
 
 
 const ManageMaterials = () => {
-  const [materials, setMaterials] = useState(initMetials);
+  const [materials, setMaterials] = useState([]);
+
+  // get all pending sessions
+  const {data, isPending, isError, error} = useQuery({
+    queryKey: ['tmaterials'],
+    queryFn: () => apiRequiestWithCredentials('get', '/materials/admin'),
+   refetchOnMount: 'always'
+  });
+  useEffect(() => {
+    if (data?.materials) {
+      setMaterials(data.materials);
+    }
+  }, [data]);
+
+
+
 
   const [deleteModal, setDeleteModal] = useState(null);
-    const [viewMaterial, setViewMaterial] = useState(null);
-  const handleDelete = (id) => {
-    setMaterials((prev) => prev.filter((mat) => mat.id !== id));
-    setDeleteModal(null);
+  const [viewMaterial, setViewMaterial] = useState(null);
+  const handleDelete = async(id) => {
+     try {
+             await apiRequiestWithCredentials("delete", `/materials/admin/${id}`);
+             await queryClient.invalidateQueries({ queryKey: ['tmaterials'] });
+             setDeleteModal(null);
+             toast.success("Material deleted.");
+           } catch (err) {
+             console.log(err)
+             toast.error("Failed to delete material.");
+           } 
+ 
   };
 
+
+  if(isPending){
+    return <Loader />;
+  }
+  if(isError){
+    return toast.error(error?.response?.data?.message);
+  }
   return (
   <> 
     <div className="max-w-7xl mx-auto px-4 min-h-[70vh]">
@@ -50,13 +85,13 @@ const ManageMaterials = () => {
           </thead>
           <tbody>
             {materials.map((mat) => (
-              <tr key={mat.id} className="border-t border-gray-200 hover:bg-gray-50">
+              <tr key={mat?._id} className="border-t border-gray-200 hover:bg-gray-50">
                 <td className="px-4 py-3">
-                  <img src={mat.image} alt={mat.title} className="w-16 h-16 object-cover rounded" />
+                  <img src={mat?.image} alt={mat?.title} className="w-16 h-16 object-cover rounded" />
                 </td>
-                <td className="px-4 py-3">{mat.title}</td>
-                <td className="px-4 py-3">{mat.sessionTitle}</td>
-                <td className="px-4 py-3">{mat.tutorEmail}</td>
+                <td className="px-4 py-3">{mat?.title.length > 20 ? `${mat?.title.slice(0,20)}...` : mat?.title}</td>
+                <td className="px-4 py-3">{ mat?.session?.title.length > 20 ? `${mat?.session?.title.slice(0,20)}...` : mat?.session?.title}</td>
+                <td className="px-4 py-3">{mat?.tutor?.email}</td>
                 <td className="px-4 py-3 space-x-2">
                   <button
                     onClick={() => setViewMaterial(mat)}
@@ -65,7 +100,7 @@ const ManageMaterials = () => {
                     View
                   </button>
                   <button
-                    onClick={() => setDeleteModal(mat.id)}
+                    onClick={() => setDeleteModal(mat?._id)}
                     className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
                   >
                     Delete
