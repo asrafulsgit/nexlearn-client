@@ -34,7 +34,7 @@ const CreateSession = () => {
     setPostLoading(true);
     try {
       await apiRequiestWithCredentials('post','/sessions/tutor',formData)
-      queryClient.invalidateQueries({ queryKey: ['tsessions'] });
+      await queryClient.invalidateQueries({ queryKey: ['tsessions'] });
       setFormData(initFormData)
       toast.success('Session created.')
       } catch (error) {

@@ -13,8 +13,9 @@ const ManageSessions = () => {
 
   // get all pending sessions
   const {data, isPending, isError, error} = useQuery({
-    queryKey: ['sessions'],
-    queryFn: () => apiRequiestWithCredentials('get', '/sessions/admin')
+    queryKey: ['tsessions'],
+    queryFn: () => apiRequiestWithCredentials('get', '/sessions/admin'),
+   refetchOnMount: 'always'
   });
   useEffect(() => {
     if (data?.sessions) {
@@ -36,7 +37,7 @@ const ManageSessions = () => {
         await apiRequiestWithCredentials("put", `/sessions/admin/approve/${selectedSession._id}`,{fee});
         setSelectedSession(null);
         setFee("");
-        await queryClient.invalidateQueries({ queryKey: ['sessions'] });
+        await queryClient.invalidateQueries({ queryKey: ['tsessions'] });
         toast.success("Session approved.");
         setApprovalModal(false);
       } catch (err) {
@@ -67,7 +68,7 @@ const ManageSessions = () => {
         setSelectedSession(null);
         setRejectionReason("");
         setRejectionFeedback("");
-        await queryClient.invalidateQueries({ queryKey: ['sessions'] });
+        await queryClient.invalidateQueries({ queryKey: ['tsessions'] });
         toast.success("Session rejected.");
         setRejectionModal(false);
       } catch (err) {
@@ -75,9 +76,16 @@ const ManageSessions = () => {
       } 
   };
   // delete model setting
-  const handleDelete = (id) => {
-    const filtered = sessions.filter((s) => s.id !== id);
-    setSessions(filtered);
+  const handleDelete = async(id) => {
+     try {
+        await apiRequiestWithCredentials("delete", `/sessions/admin/${id}`);
+        await queryClient.invalidateQueries({ queryKey: ['tsessions'] });
+        toast.success("Session deleted.");
+      } catch (err) {
+        console.log(err)
+        toast.error("Failed to deleted session.");
+      } 
+   
   };
 
   // edit model setting
@@ -89,15 +97,19 @@ const ManageSessions = () => {
     setEditModal(true);
   };
 
-  const confirmEdit = () => {
-    const updated = sessions.map((s) =>
-      s.id === selectedSession.id
-        ? { ...s, fee: parseFloat(editData.fee) }
-        : s
-    );
-    setSessions(updated);
-    setEditModal(false);
-    setSelectedSession(null);
+  const confirmEdit = async() => {
+    try {
+        await apiRequiestWithCredentials("put", `/sessions/admin/${selectedSession._id}`,editData);
+        setEditModal(false);
+        setSelectedSession(null);
+        await queryClient.invalidateQueries({ queryKey: ['tsessions'] });
+        toast.success("Session updated.");
+        setRejectionModal(false);
+      } catch (err) {
+        console.log(err)
+        toast.error("Failed to update session.");
+      } 
+    
   };
 
 
@@ -153,7 +165,7 @@ if(isPending){
                           Reject
                         </button>
                       </>
-                    ) : (
+                    ) : session?.status === "approved" ? (
                       <>
                         <button
                           onClick={() => handleEdit(session)}
@@ -168,7 +180,7 @@ if(isPending){
                           Delete
                         </button>
                       </>
-                    )}
+                    ) : '-'}
                   </td>
                 </tr>
               ))}

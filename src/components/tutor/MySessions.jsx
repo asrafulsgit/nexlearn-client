@@ -16,7 +16,8 @@ const MySessions = () => {
     queryKey: ['tsessions'],
     queryFn: () => apiRequiestWithCredentials('get', '/sessions/tutor'),
     refetchOnWindowFocus: true,
-    refetchOnMount: true
+    refetchOnMount: true,
+    refetchOnMount: 'always'
   });
   useEffect(() => {
   if (data?.sessions) {

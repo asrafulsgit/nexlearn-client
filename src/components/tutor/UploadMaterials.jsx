@@ -40,7 +40,8 @@ const UploadMaterials = () => {
     queryKey: ['tsessions'],
     queryFn: () => apiRequiestWithCredentials('get', '/sessions/tutor/approve'),
     refetchOnWindowFocus: true,
-    refetchOnMount: true
+    refetchOnMount: true,
+    refetchOnMount: 'always'
   });
   useEffect(() => {
   if (data?.sessions) {
@@ -77,7 +78,7 @@ const UploadMaterials = () => {
     e.preventDefault();
      try {
       await apiRequiestWithCredentials("post", `/materials/tutor/${selectedSession._id}`, formData);
-      await queryClient.invalidateQueries({ queryKey: ['tsessions'] });
+      await queryClient.invalidateQueries({ queryKey: ['tmaterials'] });
         setSelectedSession(null);
         setFormData(initFormData);
         toast.success("Material uploaded.");

@@ -1,40 +1,72 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import Loader from "../../additionals/Loader";
+import { apiRequiestWithCredentials } from "../../utilities/handleApis";
+import { queryClient } from "../../utilities/queryclient";
 
-const dummyMaterials = [
-  {
-    id: 1,
-    title: "Algebra Basics",
-    image: "https://via.placeholder.com/100",
-    sessionTitle: "Mathematics - Session 01",
-    driveLink: "https://drive.google.com/file/d/abc123/view", // sample link
-  },
-  {
-    id: 2,
-    title: "Photosynthesis Notes",
-    image: "https://via.placeholder.com/100",
-    sessionTitle: "Biology - Session 03",
-    driveLink: "https://drive.google.com/file/d/xyz789/view", // sample link
-  },
-];
-
-
-const MyMatetials = () => {
-  const [materials, setMaterials] = useState(dummyMaterials);
+const MyMaterials = () => {
+  const [materials, setMaterials] = useState([]);
   const [editing, setEditing] = useState(null);
   const [deleting, setDeleting] = useState(null);
 
-  const handleEdit = (id, updatedMaterial) => {
-    setMaterials(materials.map(m => (m.id === id ? updatedMaterial : m)));
-    setEditing(null);
+  // Fetch materials
+  const { data, isPending, isError, error } = useQuery({
+    queryKey: ["tmaterials"],
+    queryFn: () => apiRequiestWithCredentials("get", "/materials/tutor"),
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    refetchOnMount: 'always'
+  });
+  
+  // Update state when data changes
+  useEffect(() => {
+    if (data?.materials) {
+      setMaterials(data.materials);
+    }
+  }, [data]);
+
+  // Handle error toast outside render
+  useEffect(() => {
+    if (isError) {
+      toast.error(error?.response?.data?.message || "Failed to fetch materials");
+    }
+  }, [isError, error]);
+
+  // Edit handler
+  const handleEdit = async(id, updatedMaterial) => {
+    
+    try {
+          await apiRequiestWithCredentials("put", `/materials/tutor/${id}`, updatedMaterial);
+          await queryClient.invalidateQueries({ queryKey: ['tmaterials'] });
+            setEditing(null);
+            toast.success("Material updated.");
+          } catch (err) {
+            console.log(err)
+            toast.error("Failed to update material");
+          } 
   };
 
-  const handleDelete = (id) => {
-    setMaterials(materials.filter(m => m.id !== id));
-    setDeleting(null);
+  // Delete handler
+  const handleDelete = async(id) => {
+    try {
+          await apiRequiestWithCredentials("delete", `/materials/tutor/${id}`);
+          await queryClient.invalidateQueries({ queryKey: ['tmaterials'] });
+            setDeleting(null);
+            toast.success("Material deleted.");
+          } catch (err) {
+            console.log(err)
+            toast.error("Failed to delete material");
+          } 
+   
   };
+
+  if (isPending) {
+    return <Loader />;
+  }
 
   return (
-    <div className="min-h-[70vh]  max-w-7xl mx-auto px-4 py-10">
+    <div className="min-h-[70vh] max-w-7xl mx-auto px-4 py-10">
       <h1 className="text-3xl font-bold mb-6">My Uploaded Materials</h1>
 
       <div className="overflow-x-auto">
@@ -49,16 +81,16 @@ const MyMatetials = () => {
           </thead>
           <tbody>
             {materials.map((material) => (
-              <tr key={material.id} className="border-b border-gray-300 hover:bg-gray-50">
+              <tr key={material?._id} className="border-b border-gray-300 hover:bg-gray-50">
                 <td className="p-4">
                   <img
-                    src={material.image}
-                    alt={material.title}
+                    src={material?.image}
+                    alt={material?.title}
                     className="w-16 h-16 object-cover rounded-md"
                   />
                 </td>
-                <td className="p-4 font-medium">{material.title}</td>
-                <td className="p-4">{material.sessionTitle}</td>
+                <td className="p-4 font-medium">{material?.title?.length > 17 ? `${material?.title.slice(0,17)}...` : material?.title}</td>
+                <td className="p-4">{material?.session?.title?.length > 20 ? `${material?.session?.title?.slice(0,20)}...` : material?.session?.title}</td>
                 <td className="p-4 text-center space-x-3">
                   <button
                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
@@ -81,73 +113,59 @@ const MyMatetials = () => {
 
       {/* Edit Modal */}
       {editing && (
-       <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-  <div className="bg-white p-6 rounded-lg w-full max-w-md">
-    <h2 className="text-xl font-semibold mb-4">Edit Material</h2>
+        <div className="fixed inset-0 bg-black/50 bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg w-full max-w-md">
+            <h2 className="text-xl font-semibold mb-4">Edit Material</h2>
 
-    {/* Title */}
-    <input
-      type="text"
-      value={editing.title}
-      onChange={(e) =>
-        setEditing({ ...editing, title: e.target.value })
-      }
-      className="w-full mb-4 border p-2 rounded"
-      placeholder="Material Title"
-    />
+            <input
+              type="text"
+              value={editing.title}
+              onChange={(e) => setEditing({ ...editing, title: e.target.value })}
+              className="w-full mb-4 border p-2 rounded"
+              placeholder="Material Title"
+            />
 
-    {/* Image URL */}
-    <input
-      type="text"
-      value={editing.image}
-      onChange={(e) =>
-        setEditing({ ...editing, image: e.target.value })
-      }
-      className="w-full mb-4 border p-2 rounded"
-      placeholder="Image URL"
-    />
+            <input
+              type="text"
+              value={editing.image}
+              onChange={(e) => setEditing({ ...editing, image: e.target.value })}
+              className="w-full mb-4 border p-2 rounded"
+              placeholder="Image URL"
+            />
 
-    {/* Drive Link */}
-    <input
-      type="text"
-      value={editing.driveLink || ""}
-      onChange={(e) =>
-        setEditing({ ...editing, driveLink: e.target.value })
-      }
-      className="w-full mb-4 border p-2 rounded"
-      placeholder="Google Drive Link"
-    />
+            <input
+              type="text"
+              value={editing.driveLink || ""}
+              onChange={(e) => setEditing({ ...editing, driveLink: e.target.value })}
+              className="w-full mb-4 border p-2 rounded"
+              placeholder="Google Drive Link"
+            />
 
-    {/* Buttons */}
-    <div className="flex justify-end gap-3">
-      <button
-        className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-        onClick={() => setEditing(null)}
-      >
-        Cancel
-      </button>
-      <button
-        className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-        onClick={() => handleEdit(editing.id, editing)}
-      >
-        Save
-      </button>
-    </div>
-  </div>
-</div>
-
+            <div className="flex justify-end gap-3">
+              <button
+                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                onClick={() => setEditing(null)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                onClick={() => handleEdit(editing?._id, editing)}
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Delete Modal */}
       {deleting && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/50 bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-full max-w-sm">
-            <h2 className="text-lg font-semibold mb-4 text-red-600">
-              Confirm Deletion
-            </h2>
+            <h2 className="text-lg font-semibold mb-4 text-red-600">Confirm Deletion</h2>
             <p className="mb-4 text-sm text-gray-600">
-              Are you sure you want to delete “{deleting.title}”? This action
-              cannot be undone.
+              Are you sure you want to delete “{deleting?.title}”? This action cannot be undone.
             </p>
             <div className="flex justify-end gap-3">
               <button
@@ -158,7 +176,7 @@ const MyMatetials = () => {
               </button>
               <button
                 className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-                onClick={() => handleDelete(deleting.id)}
+                onClick={() => handleDelete(deleting?._id)}
               >
                 Delete
               </button>
@@ -170,4 +188,4 @@ const MyMatetials = () => {
   );
 };
 
-export default MyMatetials;
+export default MyMaterials;

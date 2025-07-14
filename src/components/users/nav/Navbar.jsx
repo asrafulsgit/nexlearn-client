@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useContext } from "react";
-import { Link, NavLink, useNavigate } from "react-router";
+import { Link, NavLink,  useNavigate } from "react-router";
 
 import "./navbar.css";
 import logoImage1 from "../../../assets/logo1.png";
@@ -27,12 +27,12 @@ const Navbar = () => {
           await apiRequiestWithCredentials('get','/user/logout');
           setUserInfo(null)
           setIsLoggedIn(false)
-          setLoading(false)
-          navigate('/login')
           toast.success('User logout successfull')
-        } catch (error) {
+         navigate('/', { replace: true });
           setLoading(false)
+        } catch (error) {
           toast.error(error?.response?.data?.message)
+          setLoading(false)
         }
     }
 

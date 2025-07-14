@@ -18,7 +18,8 @@ const ManageUsers = () => {
 
   const {data, isPending, isError, error} = useQuery({
     queryKey: ['users'],
-    queryFn: () => apiRequiestWithCredentials('get', '/admin/users')
+    queryFn: () => apiRequiestWithCredentials('get', '/admin/users'),
+    refetchOnMount: 'always'
   });
 
   
@@ -67,7 +68,7 @@ if(isPending){
   }
   return (
    <> 
-   <div className="max-w-7xl mx-auto px-4 min-h-[80vh]">
+   <div className="max-w-7xl mx-auto px-4 min-h-[80vh] pb-15">
       
       <div className="my-8">
       <h1 className="text-3xl font-bold text-gray-800 mb-1">Manage Users</h1>

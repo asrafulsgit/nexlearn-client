@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Navbar from './components/users/nav/Navbar'
 import { Outlet } from 'react-router'
 import Footer from './components/users/footer/Footer'
@@ -9,9 +9,20 @@ import Loader from './additionals/Loader'
 
 const App = () => {
      const {loading} = useContext(AuthContext);
-     if(loading){
-      return <Loader />
-     }
+     const [showLoader, setShowLoader] = useState(true)
+  
+     
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        setShowLoader(false)
+      }, 500)
+      return () => clearTimeout(timer)
+    }, [])
+  
+    if (loading || showLoader) {
+      return (<Loader />)
+    }
+     
   return (
     <>
       <ScrollVehaviour />

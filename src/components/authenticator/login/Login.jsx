@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { AuthContext } from "../../../controllers/AuthProvider";
 const Login = () => {
   const navigate = useNavigate();
-  const {setIsLoggedIn,setUserInfo,handleLoginWithGoogle}=useContext(AuthContext);
+  const {setIsLoggedIn, setLoading,setUserInfo,handleLoginWithGoogle}=useContext(AuthContext);
   const initForm = { email: "", password: "" };
   const [formData, setFormData] = useState(initForm);
 
@@ -18,13 +18,14 @@ const Login = () => {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
+    
     try {
           const data = await apiRequiestWithCredentials('post','/user/login',formData);
           setUserInfo(data?.user);
           setIsLoggedIn(true);
-          navigate('/');
-          setFormData(initForm);
+          navigate('/', { replace: true })
           toast.success('Login successfull');
+          setFormData(initForm);
         } catch (error) {
           console.log(error)
           toast.error(error?.response?.data?.message);
@@ -35,6 +36,7 @@ const Login = () => {
    const isRegister = await handleLoginWithGoogle();
            if(isRegister){
              setIsLoggedIn(true)
+            
              navigate('/')
              toast.success('Login successfull')
            }else{
