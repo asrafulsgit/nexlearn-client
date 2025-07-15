@@ -16,7 +16,6 @@ const MySessions = () => {
     queryKey: ['tsessions'],
     queryFn: () => apiRequiestWithCredentials('get', '/sessions/tutor'),
     refetchOnWindowFocus: true,
-    refetchOnMount: true,
     refetchOnMount: 'always'
   });
   useEffect(() => {
@@ -52,7 +51,7 @@ const MySessions = () => {
       <h2 className="text-3xl font-bold mb-2 text-gray-800">My Study Sessions</h2>
       <p className="text-gray-600 mb-6">View and manage all of your submitted study sessions.</p>
 
-      <div className="overflow-x-auto rounded-lg shadow">
+      {sessions.length > 0 ? <div className="overflow-x-auto rounded-lg shadow">
         <table className="min-w-full bg-white text-sm text-left">
           <thead className="bg-green-600 text-white uppercase">
             <tr>
@@ -122,7 +121,10 @@ const MySessions = () => {
             ))}
           </tbody>
         </table>
-      </div>
+      </div> : 
+      <div className="min-h-[10vh] w-full flex justify-center items-center">
+          <p className="text-green-600">You have no Sessions.</p>
+        </div>}
 
       {/* Reason Modal */}
       {selectedReason && (

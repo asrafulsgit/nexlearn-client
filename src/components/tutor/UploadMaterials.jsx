@@ -40,7 +40,6 @@ const UploadMaterials = () => {
     queryKey: ['tsessions'],
     queryFn: () => apiRequiestWithCredentials('get', '/sessions/tutor/approve'),
     refetchOnWindowFocus: true,
-    refetchOnMount: true,
     refetchOnMount: 'always'
   });
   useEffect(() => {
@@ -96,7 +95,7 @@ const UploadMaterials = () => {
         Add images and Google Drive links for your approved study sessions.
       </p>
 
-      <table className="w-full border border-gray-300 rounded-lg overflow-hidden">
+     {sessions.length > 0 ? <table className="w-full border border-gray-300 rounded-lg overflow-hidden">
         <thead className="bg-green-600 text-white">
           <tr>
             <th className="text-left px-4 py-3">Image</th>
@@ -133,7 +132,11 @@ const UploadMaterials = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table> : 
+        <div className="min-h-[10vh] w-full flex justify-center items-center">
+          <p className="text-green-600">You have no approved session to upload materials.</p>
+        </div>
+      }
 
       {/* Modal */}
       {modalOpen && (

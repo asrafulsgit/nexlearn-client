@@ -73,7 +73,7 @@ const ManageMaterials = () => {
       </p>
 </div>
       <div className="overflow-x-auto">
-        <table className="w-full text-sm bg-white rounded shadow">
+      {materials.length >= 0 ? <table className="w-full text-sm bg-white rounded shadow">
           <thead className="bg-green-100 text-gray-700">
             <tr>
               <th className="px-4 py-3 text-left">Image</th>
@@ -109,7 +109,11 @@ const ManageMaterials = () => {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table>:
+        <div className="min-h-[10vh] w-full flex justify-center items-center">
+          <p className="text-green-600">No materials available</p>
+        </div>
+        } 
       </div>
     </div>
 

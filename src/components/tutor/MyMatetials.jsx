@@ -15,7 +15,6 @@ const MyMaterials = () => {
     queryKey: ["tmaterials"],
     queryFn: () => apiRequiestWithCredentials("get", "/materials/tutor"),
     refetchOnWindowFocus: true,
-    refetchOnMount: true,
     refetchOnMount: 'always'
   });
   
@@ -70,7 +69,7 @@ const MyMaterials = () => {
       <h1 className="text-3xl font-bold mb-6">My Uploaded Materials</h1>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white rounded-md shadow">
+      {materials.length > 0 ?  <table className="min-w-full bg-white rounded-md shadow">
           <thead>
             <tr className="bg-gray-100 text-gray-700 text-left">
               <th className="p-4">Material Image</th>
@@ -108,7 +107,11 @@ const MyMaterials = () => {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table> : 
+        <div className="min-h-[10vh] w-full flex justify-center items-center">
+          <p className="text-green-600">You have no materials.</p>
+        </div>
+        }
       </div>
 
       {/* Edit Modal */}

@@ -217,7 +217,6 @@ if(isPending){
           <div className="p-6 text-center text-gray-500">No users found</div>
         )}
       </div> : 
-
       <div className="min-h-[10vh] w-full flex justify-center items-center">
           <p className="text-green-600">Loading...</p>
       </div>
