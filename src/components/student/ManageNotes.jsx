@@ -1,20 +1,14 @@
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { apiRequiestWithCredentials } from "../../utilities/handleApis";
+import Loader from "../../additionals/Loader";
+import { toast } from "react-toastify";
+import { queryClient } from "../../utilities/queryclient";
 
-const dummyNotes = [
-  {
-    id: 1,
-    title: "React Basics",
-    description: "This note covers JSX, components, props, and state in React.",
-  },
-  {
-    id: 2,
-    title: "Node.js Intro",
-    description: "Node.js allows JavaScript to run on the server. It's built on Chrome's V8.",
-  },
-];
+
 
 const ManageNotes = () => {
-  const [notes, setNotes] = useState(dummyNotes);
+  const [notes, setNotes] = useState([]);
   const [selectedNote, setSelectedNote] = useState(null);
   const [editNote, setEditNote] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
@@ -22,26 +16,76 @@ const ManageNotes = () => {
   const [showEdit, setShowEdit] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
 
-  // Handlers
-  const handleUpdate = () => {
-    setNotes((prev) =>
-      prev.map((note) =>
-        note.id === editNote.id ? editNote : note
-      )
-    );
-    setShowEdit(false);
+
+  // get all notes created by student
+  const { data, isPending, isError, error } = useQuery({
+    queryKey: ["snotes"],
+    queryFn: () => apiRequiestWithCredentials("get", "/notes/student"),
+    refetchOnWindowFocus: true,
+    refetchOnMount: 'always'
+  });
+
+  // Update state when data changes
+    useEffect(() => {
+      if (data?.notes) {
+        setNotes(data.notes);
+      }
+    }, [data]);
+   
+    // Handle error toast outside render
+      useEffect(() => {
+        if (isError) {
+          toast.error(error?.response?.data?.message || "Failed to fetch materials");
+        }
+      }, [isError, error]);
+
+
+
+  // update note settings
+  const handleUpdate = async(id) => {
+     try {
+              await apiRequiestWithCredentials("put", `/notes/student/${id}`, editNote);
+              await queryClient.invalidateQueries({ queryKey: ['snotes'] });
+                setEditNote(null);
+                toast.success("Note updated.");
+                setShowEdit(false);
+              } catch (err) {
+                console.log(err)
+                toast.error("Failed to update note");
+              } 
+    
   };
 
-  const handleDelete = () => {
-    setNotes((prev) => prev.filter((n) => n.id !== deleteId));
-    setShowDelete(false);
+  const handleDelete = async() => {
+    // setNotes((prev) => prev.filter((n) => n.id !== deleteId));
+    // setShowDelete(false);
+    console.log(deleteId)
+
+     try {
+          await apiRequiestWithCredentials("delete", `/notes/student/${deleteId}`);
+          await queryClient.invalidateQueries({ queryKey: ['snotes'] });
+          setDeleteId(null);
+          toast.success("Note deleted.");
+          setShowDelete(false);
+          } catch (err) {
+            console.log(err)
+            toast.error("Failed to delete note");
+          } 
+
+
   };
 
+
+
+  // load page when data fateching 
+  if (isPending) {
+    return <Loader />;
+  }
   return (
     <section className="min-h-screen  py-10 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4">
         <h2 className="text-3xl font-bold text-gray-800 mb-6">Manage Your Notes</h2>
-        <div className="overflow-x-auto bg-white shadow rounded-lg">
+       {notes.length > 0 ? <div className="overflow-x-auto bg-white shadow rounded-lg">
           <table className="min-w-[900px] w-full table-auto">
             <thead className="bg-gray-100 text-gray-600 text-left text-sm uppercase tracking-wider">
               <tr>
@@ -52,12 +96,12 @@ const ManageNotes = () => {
             </thead>
             <tbody className="text-gray-700 text-sm divide-y divide-gray-200">
               {notes.map((note) => (
-                <tr key={note?.id}>
-                  <td className="px-6 py-4 font-medium">{note.title}</td>
+                <tr key={note?._id}>
+                  <td className="px-6 py-4 font-medium">{note?.title}</td>
                   <td className="px-6 py-4">
-                    {note?.description?.length > 40
-                      ? note?.description?.slice(0, 40) + "..."
-                      : note?.description}
+                    {note?.content?.length > 40
+                      ? note?.content?.slice(0, 40) + "..."
+                      : note?.content}
                   </td>
                   <td className="px-6 py-4 space-x-2">
                     <button
@@ -80,7 +124,7 @@ const ManageNotes = () => {
                     </button>
                     <button
                       onClick={() => {
-                        setDeleteId(note?.id);
+                        setDeleteId(note?._id);
                         setShowDelete(true);
                       }}
                       className="cursor-pointer text-red-600 hover:underline"
@@ -92,14 +136,18 @@ const ManageNotes = () => {
               ))}
             </tbody>
           </table>
+        </div> : 
+        <div className="min-h-[10vh] w-full flex justify-center items-center">
+          <p className="text-green-600">You have no notes.</p>
         </div>
+        }
 
         {/* View Modal */}
         {showView && selectedNote && (
           <div className="fixed inset-0 bg-black/40 bg-opacity-40 z-50 flex items-center justify-center">
             <div className="bg-white w-full max-w-md rounded-lg shadow p-6 animate-fadeIn">
-              <h3 className="text-xl font-semibold mb-4">{selectedNote.title}</h3>
-              <p className="text-gray-700">{selectedNote.description}</p>
+              <h3 className="text-xl font-semibold mb-4">{selectedNote?.title}</h3>
+              <p className="text-gray-700">{selectedNote?.content}</p>
               <button
                 onClick={() => setShowView(false)}
                 className="cursor-pointer mt-6 bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800"
@@ -126,9 +174,9 @@ const ManageNotes = () => {
                   placeholder="Title"
                 />
                 <textarea
-                  value={editNote.description}
+                  value={editNote.content}
                   onChange={(e) =>
-                    setEditNote({ ...editNote, description: e.target.value })
+                    setEditNote({ ...editNote, content: e.target.value })
                   }
                   rows="5"
                   className="w-full border px-4 py-2 rounded"
@@ -143,7 +191,7 @@ const ManageNotes = () => {
                   Cancel
                 </button>
                 <button
-                  onClick={handleUpdate}
+                  onClick={()=>handleUpdate(editNote?._id)}
                   className="cursor-pointer px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
                 >
                   Update
