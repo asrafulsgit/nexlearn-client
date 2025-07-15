@@ -35,7 +35,7 @@ const ManageNotes = () => {
     // Handle error toast outside render
       useEffect(() => {
         if (isError) {
-          toast.error(error?.response?.data?.message || "Failed to fetch materials");
+          toast.error(error?.response?.data?.message || "Failed to fetch notes");
         }
       }, [isError, error]);
 
@@ -57,10 +57,6 @@ const ManageNotes = () => {
   };
 
   const handleDelete = async() => {
-    // setNotes((prev) => prev.filter((n) => n.id !== deleteId));
-    // setShowDelete(false);
-    console.log(deleteId)
-
      try {
           await apiRequiestWithCredentials("delete", `/notes/student/${deleteId}`);
           await queryClient.invalidateQueries({ queryKey: ['snotes'] });

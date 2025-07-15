@@ -1,54 +1,66 @@
-import React, { useState } from "react";
-const sessions = [
-  {
-    title: "Advanced Calculus Review",
-    description: "Deep dive into multi-variable calculus and differential equations.",
-    image: "https://images.unsplash.com/photo-1701170645257-8345722edf47?crop=entropy&q=80&w=1080",
-    status: "Ongoing",
-    date: "2024-08-15",
-  },
-  {
-    title: "Introduction to Python Programming",
-    description: "Learn the basics of Python for beginners, including data structures.",
-    image: "https://images.unsplash.com/photo-1685599504130-9ee12eef06eb?crop=entropy&q=80&w=1080",
-    status: "Closed",
-    date: "2024-07-01",
-  },
-  {
-    title: "Organic Chemistry Fundamentals",
-    description: "Essential concepts for understanding organic reactions and structures.",
-    image: "https://images.unsplash.com/photo-1588170645026-dc9e6a4eb215?crop=entropy&q=80&w=1080",
-    status: "Ongoing",
-    date: "2024-08-20",
-  },
-  {
-    title: "Data Science with R",
-    description: "Explore data analysis, visualization, and machine learning with R.",
-    image: "https://placehold.co/600x400?text=Data+Science",
-    status: "Ongoing",
-    date: "2024-09-01",
-  },
-  {
-    title: "Full-Stack Web Development",
-    description: "Build dynamic web applications using modern frameworks.",
-    image: "https://placehold.co/600x400?text=Web+Development",
-    status: "Closed",
-    date: "2024-06-10",
-  },
-  {
-    title: "Quantum Physics Explained",
-    description: "An accessible introduction to the mysteries of quantum mechanics.",
-    image: "https://placehold.co/600x400?text=Physics",
-    status: "Ongoing",
-    date: "2024-09-15",
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import React, { useEffect, useState } from "react";
+import { apiRequiest } from "../../../utilities/handleApis";
+import { toast } from "react-toastify";
+import Loader from "../../../additionals/Loader";
+import { Link } from "react-router";
+import { dateFormat } from "../../../utilities/dateFormate";
 
 
 const StudySessions= () => {
   const [activePage, setActivePage] = useState(1);
+  const [sessions, setSessions] = useState([]);
+
+
+   // get all notes created by student
+  const { data, isPending, isError, error } = useQuery({
+    queryKey: ["tsessions"],
+    queryFn: () => apiRequiest("get", "/sessions/user"),
+    refetchOnWindowFocus: true,
+    refetchOnMount: 'always'
+  });
+    
+  // Update state when data changes
+    useEffect(() => {
+      if (data?.sessions) {
+        setSessions(data.sessions);
+      }
+    }, [data]);
+   
+    // Handle error toast outside render
+      useEffect(() => {
+        if (isError) {
+          toast.error(error?.response?.data?.message || "Failed to fetch sessions");
+        }
+      }, [isError, error]);
+
+
+
+// sesion status functionality
+
+const getSessionStatus = (registrationStart, registrationEnd) => {
+  const now = new Date();
+  const start = new Date(registrationStart);
+  const end = new Date(registrationEnd);
+
+  if (now >= start && now <= end) {
+    return "Open"  
+  } else if (now > end) {
+    return "Closed"  
+  } else if (now < start) {
+    return "Upcoming"  
+  }
+};
+
+
+
+// load page when data fateching 
+  if (isPending) {
+    return <Loader />;
+  }
+
   return (
-    <section className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-16">
+    <section className="min-h-screen bg-gray-50 py-12 px-4 ">
       {/* Header */}
       <div className="text-center mb-12">
         <h1 className="text-4xl font-extrabold text-gray-900 mb-2">Study Sessions</h1>
@@ -73,47 +85,64 @@ const StudySessions= () => {
       </div>
 
       {/* Sessions Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      {sessions.length > 0 ? <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {sessions?.map((session, index) => (
           <div key={index} className="bg-white rounded-lg shadow hover:shadow-md 
           transition overflow-hidden relative flex flex-col h-full">
             <div className="relative">
               <img
-                src={session.image}
-                alt="Session"
+                src={session?.image}
+                alt="Session image"
                 className="w-full h-48 object-cover"
               />
               {/* Status Badge */}
-              <div className={`absolute top-3 right-3 px-3 py-1 text-sm rounded-full font-semibold ${
-                session.status === "Ongoing"
-                  ? "bg-green-100 text-green-800"
-                  : "bg-red-100 text-red-800"
-              }`}>
-                {session.status}
-              </div>
+              {(() => {
+  const status = getSessionStatus(session?.registrationStart, session?.registrationEnd);
+  const statusStyles = {
+    Open: "bg-green-100 text-green-800",
+    Closed: "bg-red-100 text-red-800",
+    Upcoming: "bg-yellow-100 text-yellow-800",
+  };
+  return (
+    <div
+      className={`absolute top-3 right-3 px-3 py-1 text-sm rounded-full font-semibold ${
+        statusStyles[status] || "bg-gray-100 text-gray-800"
+      }`}
+    >
+      {status}
+    </div>
+  );
+})()}
+
+
             </div>
-            <div className="flex flex-col justify-between flex-grow p-5">
+            <div className="flex flex-col justify-between flex-grow p-3">
               <div>
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                  {session.title}
+                  {session?.title.length > 23 ? `${session?.title.slice(0,23)}...` : session?.title}
                 </h3>
                 <p className="text-sm text-gray-600 mb-4">
-                  {session.description}
+                  {session?.description.length > 80 ? `${session?.description.slice(0,80)}...` : session?.description}
                 </p>
               </div>
               <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-200">
-                <span className="text-sm text-gray-500">Starts: {session.date}</span>
-                <a
-                  href="#"
+                <span className="text-sm text-gray-500">Starts: {dateFormat(session?.classStart)}</span>
+                <Link
+                  to={`/session/${session?._id}`}
                   className="text-sm text-green-600 hover:text-green-800 font-medium"
                 >
                   Read More
-                </a>
+                </Link>
               </div>
             </div>
           </div>
         ))}
-      </div>
+      </div> : 
+      <div className="min-h-[10vh] w-full flex justify-center items-center">
+          <p className="text-green-600">No session available for now.</p>
+        </div>
+      
+      }
 
       {/* Pagination */}
       <div className="flex justify-center mt-16">
