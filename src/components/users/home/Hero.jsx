@@ -1,3 +1,5 @@
+import { Link } from "react-router";
+
 const Hero = () => {
   return (
     <section
@@ -25,18 +27,24 @@ const Hero = () => {
       share resources, and manage your educational journey effectively.
     </p>
     <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-      <button
-        className="bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-400 focus:outline-none text-white font-bold py-3 px-8 rounded-lg transition duration-300 ease-in-out shadow-md"
+      <Link to='/study-sessions'> <button
+        className="bg-blue-600 cursor-pointer hover:bg-blue-700  focus:outline-none
+         text-white font-bold py-4 px-8 rounded-lg transition duration-300 ease-in-out shadow-md"
         aria-label="Find a Study Session"
       >
         Find a Study Session
-      </button>
+      </button></Link>
+      <Link to='/tutors'>
       <button
-        className="bg-transparent border-2 border-white hover:bg-white hover:text-gray-900 focus:ring-4 focus:ring-white focus:outline-none text-white font-bold py-3 px-8 rounded-lg transition duration-300 ease-in-out shadow-md"
+        className="bg-transparent cursor-pointer border-2 border-white
+         hover:bg-white hover:text-gray-900 focus:outline-none
+          text-white font-bold py-3.5 px-8 rounded-lg 
+          transition duration-300 ease-in-out shadow-md"
         aria-label="Become a Tutor"
       >
-        Become a Tutor
+        Browse Tutors
       </button>
+      </Link>
     </div>
   </div>
 </section>

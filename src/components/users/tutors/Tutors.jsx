@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import React, { useEffect, useState } from "react";
+import { apiRequiest } from "../../../utilities/handleApis";
+import { toast } from "react-toastify";
 
 const tutorsData = [
   {
@@ -39,14 +42,30 @@ const Tutors = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [subjectFilter, setSubjectFilter] = useState("");
 
-  const filteredTutors = tutorsData.filter(tutor => {
-    const matchesSearch = tutor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      tutor.subject.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesSubject = subjectFilter ? tutor.subject.toLowerCase() === subjectFilter.toLowerCase() : true;
-    return matchesSearch && matchesSubject;
-  });
+  const [tutors,setTutors]=useState([])
+   // get all available sessions
+    const { data, isPending, isError, error } = useQuery({
+      queryKey: ["tutors"],
+      queryFn: () => apiRequiest("get", "/tutors"),
+      refetchOnWindowFocus: true,
+      refetchOnMount: 'always'
+    });
+  
+    // Update state when data changes
+      useEffect(() => {
+        if (data?.tutors) {
+          setTutors(data.tutors);
+        }
+      }, [data]);
+     
+      // Handle error toast outside render
+        useEffect(() => {
+          if (isError) {
+            toast.error(error?.response?.data?.message || "Failed to fetch sessions");
+          }
+        }, [isError, error]);
 
-  const uniqueSubjects = [...new Set(tutorsData.map(t => t.subject))];
+        const uniqueSubjects = []
 
   return (
     <section className="min-h-screen bg-gray-50 py-10  ">
@@ -89,8 +108,38 @@ const Tutors = () => {
 
         {/* Tutors Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {filteredTutors.map((tutor) => (
+          {tutors?.map((tutor) => (
             <div
+              key={tutor?._id}
+              className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-lg transition"
+            >
+              <img
+                src={tutor?.avatar}
+                alt={tutor?.name}
+                className="w-24 h-24 rounded-full object-cover mb-4 mx-auto"
+              />
+              <h3 className="text-xl font-semibold text-center text-gray-800">{tutor?.name}</h3>
+              <p className="text-sm text-center text-gray-500 mb-1">{tutor?.email}</p>
+              {/* <p className="text-sm text-center text-gray-500 mb-1">{tutor.subject}</p> */}
+              {/* <p className="text-sm text-center text-yellow-500 font-semibold">⭐ {tutor.rating}</p> */}
+              {/* <p className="text-gray-600 text-sm mt-4 text-center">{tutor.bio}</p> */}
+              {/* <div className="mt-6 text-center">
+                <button className="bg-green-600 hover:bg-green-700 text-white py-2 px-5 rounded-lg text-sm font-medium transition">View Profile</button>
+              </div> */}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Tutors;
+
+
+// upgrade feature
+/*
+<div
               key={tutor.id}
               className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-lg transition"
             >
@@ -107,11 +156,4 @@ const Tutors = () => {
                 <button className="bg-green-600 hover:bg-green-700 text-white py-2 px-5 rounded-lg text-sm font-medium transition">View Profile</button>
               </div>
             </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-export default Tutors;
+*/

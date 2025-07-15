@@ -1,5 +1,5 @@
 import React from "react";
-
+import booksImage from '../../../assets/books.jpg'
 const WhyNexLearn = () => {
   const features = [
     {
@@ -65,7 +65,7 @@ const WhyNexLearn = () => {
           </div>
           <div className="lg:w-1/2">
             <img
-              src="https://images.unsplash.com/photo-1606479067834-db5efd9f2fe9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2MzQ2fDB8MXxzZWFyY2h8Mnx8c3R1ZGVudHMlMjUyMGNvbGxhYm9yYXRpbmclMjUyMG9ubGluZXxlbnwxfDB8fHwxNzUyMTIwMTEyfDA&ixlib=rb-4.1.0&q=80&w=1080"
+              src={booksImage}
               alt="Students collaborating"
               className="rounded-lg shadow-lg w-full h-auto object-cover"
               loading="lazy"

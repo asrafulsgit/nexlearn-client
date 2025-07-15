@@ -7,6 +7,7 @@ import Loader from "../../../additionals/Loader";
 import { dateFormat } from "../../../utilities/dateFormate";
 import { AuthContext } from "../../../controllers/AuthProvider";
 import { queryClient } from "../../../utilities/queryclient";
+import { getSessionStatus } from "../../../utilities/sessionStatus";
 
 const SessionDetails = () => {
   // const session = {
@@ -152,20 +153,6 @@ const SessionDetails = () => {
   //   alert("Review submitted successfully");
   // };
 
-// booking status checking 
-  const getSessionStatus = (registrationStart, registrationEnd) => {
-  const now = new Date();
-  const start = new Date(registrationStart);
-  const end = new Date(registrationEnd);
-
-  if (now >= start && now <= end) {
-    return "Open"  
-  } else if (now > end) {
-    return "Closed"  
-  } else if (now < start) {
-    return "Upcoming"  
-  }
-};
 
 // load page when data fateching 
   if (isPending || session === null) {

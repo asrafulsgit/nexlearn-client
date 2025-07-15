@@ -186,8 +186,8 @@ const Navbar = () => {
           <div className="hidden lg:ml-6 lg:flex lg:space-x-8">
             {[
               "home",
-              "tutors",
               "study-sessions",
+              "tutors",
               "about-us",
               "contact",
               "faqs",
@@ -207,49 +207,6 @@ const Navbar = () => {
               </NavLink>
             ))}
           </div>
-
-          {/* Desktop Buttons */}
-          {/* <div className="ml-6 flex items-center">
-            {!user ? (
-              <>
-                <Link to="login">
-                  <button
-                    type="button"
-                    className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200"
-                  >
-                    Login
-                  </button>
-                </Link>
-                <Link to="register">
-                  <button
-                    type="button"
-                    className="ml-3 inline-flex items-center px-4 py-2 border 
-              border-transparent rounded-md shadow-sm text-sm font-medium text-white
-               bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200"
-                  >
-                    Register
-                  </button>
-                </Link>
-              </>
-            ) : (
-              <div className="flex items-center space-x-3">
-                <button
-                  onClick={handleLogout}
-                  className="text-sm px-4 py-2 cursor-pointer bg-gray-400 text-white rounded-md 
-  hover:bg-gray-500 transition duration-300  
-  focus:outline-none"
-                >
-                  Logout
-                </button>
-
-                <img
-                  src={user.photoURL}
-                  alt={user.name}
-                  className="w-9 h-9 cursor-pointer rounded-full object-cover border border-green-500"
-                />
-              </div>
-            )}
-          </div> */}
 
           <div className="relative ml-6 flex items-center" ref={dropdownRef}>
             {!isLoggedIn ? (
@@ -329,8 +286,8 @@ const Navbar = () => {
               <div className="space-y-1">
                 {[
                   "home",
-                  "tutors",
                   "study-sessions",
+                  "tutors",
                   "about-us",
                   "contact",
                   "faqs",

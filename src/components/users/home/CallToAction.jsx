@@ -1,3 +1,5 @@
+import { Link } from "react-router";
+
 const CallToAction = () => {
   return (
     <section
@@ -18,22 +20,22 @@ const CallToAction = () => {
           Ready to take your learning to the next level?
         </h2>
         <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-          <a
-            href="#"
+          <Link
+            to="/register"
             className="inline-flex items-center justify-center px-8 py-4 border 
             border-transparent text-base font-medium rounded-md text-green-600 bg-white
              hover:bg-green-100 transition-colors duration-300 shadow-sm"
           >
             Join Now
-          </a>
-          <a
-            href="#"
+          </Link>
+          <Link
+            to="/study-sessions"
             className="inline-flex items-center justify-center px-8 py-4 border-2 border-white 
             text-base font-medium rounded-md text-white hover:bg-white hover:text-green-600 
             transition-colors duration-300  shadow-sm"
           >
             Browse Sessions
-          </a>
+          </Link>
         </div>
       </div>
     </section>

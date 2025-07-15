@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "../../../controllers/AuthProvider";
+import { Link } from "react-router";
 
 const AboutUs = () => {
+  const {isLoggedIn}=useContext(AuthContext);
   return (
     <section className="min-h-screen bg-gray-50 py-10 ">
       <div className="max-w-7xl mx-auto px-4">
@@ -44,18 +47,18 @@ const AboutUs = () => {
         </div>
 
         {/* Section 4: Join Our Community */}
-        <div className="text-center">
+        {!isLoggedIn && <div className="text-center">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Join Our Community</h2>
           <p className="text-gray-600 max-w-xl mx-auto mb-6">
             Ready to take the next step in your learning journey? Join NexLearn and experience a modern, engaging, and collaborative approach to education.
           </p>
-          <a
-            href="/register"
+          <Link
+            to="/register"
             className="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition"
           >
             Get Started
-          </a>
-        </div>
+          </Link>
+        </div>}
       </div>
     </section>
   );
