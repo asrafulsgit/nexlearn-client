@@ -56,14 +56,14 @@ const SessionDetails = () => {
               }, [isError, error]);
 
     // get booked session 
-    const { data : isBookedData, isError : isErrorBook, error : errorBook} = useQuery({
+    const { data : isBookedData,isPending :bookPending, isError : isErrorBook, error : errorBook} = useQuery({
       queryKey: ["booked",id],
       queryFn: () => apiRequiestWithCredentials("get", `/booked/check/${id}`),
       refetchOnWindowFocus: true,
       refetchOnMount: 'always'
     });
 
- 
+    
   
   const allReviews = [
     {
@@ -90,22 +90,10 @@ const SessionDetails = () => {
   ];
 
   // Filter reviews for this session
-  // const reviews = allReviews.filter((review) => review.sessionId === session._id);
-
-  // // Simulate logged-in user
-  // const user = {
-  //   email: "student@example.com",
-  //   role: "student",
-  //   isLoggedIn: true,
-  //   bookedSessions: ["abc123"], 
-  // };
-
   
 
-  // Review form state
-  const [rating, setRating] = useState(0);
-  const [message, setMessage] = useState("");
-  // const [reviewsState, setReviewsState] = useState(reviews);
+
+  
 
   const handleBooking = async() => {
     const status = getSessionStatus(session?.registrationStart, session?.registrationEnd);
@@ -136,26 +124,60 @@ const SessionDetails = () => {
    
   };
 
-  // const handleReviewSubmit = () => {
-  //   if (rating === 0 || message.trim() === "") return;
+  
+  const [reviews, setReviews] = useState([]);
+  // get review 
+    const { data : reviewData, isPending :isReviewPending, isError : isReviewError, error : reviewError} = useQuery({
+      queryKey: ["reviews"],
+      queryFn: () => apiRequiestWithCredentials("get", `/reviews/session/${id}`),
+      refetchOnWindowFocus: true,
+      refetchOnMount: 'always'
+    });
 
-  //   const newReview = {
-  //     sessionId: session._id,
-  //     student: user.email,
-  //     rating,
-  //     comment: message,
-  //     date: new Date().toISOString().split("T")[0], // yyyy-mm-dd
-  //   };
+    // set reviews
+        useEffect(() => {
+          if (reviewData?.reviews) {
+            setReviews(reviewData?.reviews);
+          }
+        }, [reviewData]);
+    // Review form state
+    const [rating, setRating] = useState(0);
+    const [comment, setComment] = useState("");
+    const [postLoading,setPostLoading]=useState('')
+  const handleReviewSubmit = async() => {
+    const isReviewed = reviews?.find(r => r.student.email === userInfo.email)
+    if(isReviewed){
+      toast.error('You have reviewed')
+      return;
+    }
+    setPostLoading(true)
+try {
+              await apiRequiestWithCredentials("post", `/reviews/${id}`, {rating, comment });
+              await queryClient.invalidateQueries({ queryKey: ['reviews'] });
+                setComment('');
+                setRating(0);
+                toast.success("Review posted.");
+              } catch (err) {
+                console.log(err)
+                toast.error("Failed to post review.");
+              }finally{
+                setPostLoading(false)
+              }
 
-  //   setReviewsState((prev) => [newReview, ...prev]);
-  //   setRating(0);
-  //   setMessage("");
-  //   alert("Review submitted successfully");
-  // };
+  }
+
+  const reviewedFucntion =(email)=>{
+    const isReviewed = reviews?.find(r => r.student.email === email)
+    if(isReviewed){
+      return false;
+    }
+    return true;
+  }
+ 
 
 
 // load page when data fateching 
-  if (isPending || session === null) {
+  if (isPending || session === null || bookPending || isReviewPending) {
     return <Loader />;
   }
   
@@ -169,31 +191,40 @@ const SessionDetails = () => {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
+          {/* session details */}
           <div className="md:col-span-2">
             <img src={session?.image} alt="Session" className="w-full h-64 object-cover rounded-lg mb-6" />
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">Description</h2>
             <p className="text-gray-700 mb-6 leading-relaxed">{session?.description}</p>
 
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">Student Reviews</h2>
-            {/* {reviews.length > 0 ? (
+            {reviews?.length > 0 ? (
               <div className="space-y-4">
                 {reviews.map((review, i) => (
-                  <div key={i} className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                  <div key={i} className="bg-white p-3 
+                  rounded-lg shadow-sm border border-gray-100 " >
                     <div className="flex justify-between items-center mb-2">
-                      <p className="font-medium text-gray-800">{review.student}</p>
-                      <span className="text-yellow-500 font-semibold">⭐ {review.rating}</span>
+                      <div className="flex items-center gap-2">
+                        <img src={review?.student?.avatar} alt="reviewer image" className="w-10" />
+                        <div>
+                          <p className="font-medium text-gray-800">{review?.student?.name}</p>
+                          <p className="text-gray-400 text-xs">{dateFormat(review?.createdAt)}</p>
+                        </div>
+                      </div>
+                      <span className="text-yellow-500 font-semibold">⭐ {review?.rating}</span>
                     </div>
-                    <p className="text-gray-600 text-sm mb-1">{review.comment}</p>
-                    <p className="text-gray-400 text-xs">Reviewed on {review.date}</p>
+                    <p className="text-gray-600 text-sm  mt-3">{review?.comment}</p>
                   </div>
                 ))}
               </div>
             ) : (
               <p className="text-gray-500 italic">No reviews yet.</p>
-            )} */}
+            )}
           </div>
 
-           <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 flex flex-col justify-between">
+            {/* book session card */}
+           <div className="bg-white p-4 rounded-xl shadow-sm border
+            border-gray-100 flex flex-col justify-between">
             <div className="space-y-3 mb-6">
               <h3 className="text-xl font-bold text-gray-800">Session Info</h3>
               <p>
@@ -235,7 +266,7 @@ const SessionDetails = () => {
           )})()}
 
             {/* Show review form only if booked */}
-            {/* {isAlreadyBooked && (
+            {isBookedData?.isBooked && (
               <div className="mt-8">
                 <h3 className="text-xl font-bold mb-4">Leave a Review</h3>
                 <div className="space-y-4">
@@ -266,26 +297,26 @@ const SessionDetails = () => {
                       id="message"
                       rows={4}
                       className="w-full border border-gray-300 rounded-md p-2"
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
                       placeholder="Write your review here"
                     />
                   </div>
 
                   <button
-                    disabled={rating === 0 || message.trim() === ""}
+                    disabled={rating === 0 || comment.trim() === ""}
                     onClick={handleReviewSubmit}
                     className={`w-full py-3 px-4 text-white font-semibold rounded-lg transition duration-300 ${
-                      rating !== 0 && message.trim() !== ""
+                      rating !== 0 && comment.trim() !== ""
                         ? "bg-blue-600 hover:bg-blue-700"
                         : "bg-gray-400 cursor-not-allowed"
                     }`}
                   >
-                    Submit Review
+                    {postLoading ? 'Posting...' : 'Post Review'}
                   </button>
                 </div>
               </div>
-            )} */}
+            )}
           </div>
         </div>
         

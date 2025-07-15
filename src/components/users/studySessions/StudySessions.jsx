@@ -9,14 +9,16 @@ import { getSessionStatus } from "../../../utilities/sessionStatus";
 
 
 const StudySessions= () => {
-  const [activePage, setActivePage] = useState(1);
   const [sessions, setSessions] = useState([]);
-
+  const [activePage, setActivePage] = useState(1);
+  const [totalPages,setTotalPages]=useState(0);
+  const [limit,setLimit]=useState(3);
+  const [search,setSearch]=useState('');
 
    // get all notes created by student
-  const { data, isPending, isError, error } = useQuery({
-    queryKey: ["tsessions"],
-    queryFn: () => apiRequiest("get", "/sessions/user"),
+  const { data, isPending, isError, error,refetch } = useQuery({
+    queryKey: ["tsessions",activePage],
+    queryFn: () => apiRequiest("get", `/sessions/user?page=${activePage}&limit=${limit}`),
     refetchOnWindowFocus: true,
     refetchOnMount: 'always'
   });
@@ -25,6 +27,7 @@ const StudySessions= () => {
     useEffect(() => {
       if (data?.sessions) {
         setSessions(data.sessions);
+        setTotalPages(data?.totalPages || 0);
       }
     }, [data]);
    
@@ -37,7 +40,55 @@ const StudySessions= () => {
 
 
 
+const handlePageChange = async(page) => {
+    setActivePage(page);
+    if (page >= 1 && page <= totalPages && page !== activePage) {
+      setActivePage(page);
+    }
+  };
 
+
+  // search functionality
+  const refetchFunction = async()=>{
+const result = await refetch(); 
+
+   
+    if (result.data?.sessions) {
+      setSessions(result.data.sessions);
+    }
+}
+  const handleSearch = (value)=>{
+      setSearch(value)
+      searchFunctionality(value.trim())
+    }
+  
+    const [filterLoading,setFilterLoading] = useState(false);
+  
+    let interval;
+       const searchFunctionality=async(searchValue)=>{ 
+        clearTimeout(interval)
+        if (!searchValue) {
+          refetchFunction()
+          return;
+        }
+         setFilterLoading(true)
+    
+           interval = setTimeout(async() => {
+            
+           try {
+             const data = await apiRequiest('get',`/sessions/user/search?name=${searchValue}`)
+             console.log(data)
+             setSessions(data?.sessions)
+      
+             } catch (error) {
+               setSessions([])
+               toast.error(error?.response?.data?.message)
+               
+             }finally{
+              setFilterLoading(false)
+             }
+          }, 1000); 
+       }
 
 
 
@@ -62,18 +113,23 @@ const StudySessions= () => {
       flex-col lg:flex-row lg:justify-between items-center gap-4">
         <input
           type="text"
-          placeholder="Search sessions..."
+          value={search}
+          onChange={(e)=> handleSearch(e.target.value)}
+          placeholder="Search by name..."
           className="w-full lg:w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
         />
-        <select className="w-full lg:w-1/4 px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500">
+        {/* <select className="w-full lg:w-1/4 px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500">
           <option value="">Filter by Status</option>
           <option value="ongoing">Ongoing</option>
           <option value="closed">Closed</option>
-        </select>
+        </select> */}
       </div>
 
       {/* Sessions Grid */}
-      {sessions.length > 0 ? <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    {!filterLoading ?  
+    
+    <> 
+    {sessions.length > 0 ? <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {sessions?.map((session, index) => (
           <div key={index} className="bg-white rounded-lg shadow hover:shadow-md 
           transition overflow-hidden relative flex flex-col h-full">
@@ -132,29 +188,56 @@ const StudySessions= () => {
       
       }
 
+      
       {/* Pagination */}
-      <div className="flex justify-center mt-16">
-        <nav className="inline-flex items-center space-x-2 text-sm">
-          <a href="#" className="px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-100">
-            Previous
-          </a>
-          {[1, 2, 3].map((page) => (
-            <a
-              key={page}
-              href="#"
-              onClick={() => setActivePage(page)}
-              className={`px-4 py-2 rounded-md border border-gray-300  ${
-                activePage === page ? "bg-green-600 text-white border-green-600" : "bg-white text-gray-700 hover:bg-gray-100"
-              }`}
+      {totalPages > 1 && (
+        <div className="flex justify-center mt-16">
+          <nav className="inline-flex items-center space-x-2 text-sm">
+            <button
+              onClick={() => handlePageChange(activePage - 1)}
+              disabled={activePage === 1}
+              className="px-4 cursor-pointer py-2 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50"
             >
-              {page}
-            </a>
-          ))}
-          <a href="#" className="px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-100">
-            Next
-          </a>
-        </nav>
+              Previous
+            </button>
+
+            {[...Array(totalPages)].map((_, index) => {
+              const page = index + 1;
+              return (
+                <button
+                  key={page}
+                  onClick={() => handlePageChange(page)}
+                  className={`px-4 cursor-pointer py-2 rounded-md border ${
+                    activePage === page
+                      ? "bg-green-600 text-white border-green-600"
+                      : "bg-white text-gray-700 hover:bg-gray-100 border-gray-300"
+                  }`}
+                >
+                  {page}
+                </button>
+              );
+            })}
+
+            <button
+              onClick={() => handlePageChange(activePage + 1)}
+              disabled={activePage === totalPages}
+              className="px-4 cursor-pointer py-2 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+            >
+              Next
+            </button>
+          </nav>
+        </div>
+      )} </>
+
+      :
+
+      <div className="min-h-[10vh] w-full flex justify-center items-center">
+          <p className="text-green-600">Loading...</p>
       </div>
+      
+    }
+
+
     </section>
   );
 };

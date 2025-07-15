@@ -3,40 +3,40 @@ import React, { useEffect, useState } from "react";
 import { apiRequiest } from "../../../utilities/handleApis";
 import { toast } from "react-toastify";
 
-const tutorsData = [
-  {
-    id: 1,
-    name: "Emma Watson",
-    subject: "Mathematics",
-    rating: 4.8,
-    bio: "Experienced math tutor with a passion for helping students grasp difficult concepts.",
-    image: "https://randomuser.me/api/portraits/women/65.jpg"
-  },
-  {
-    id: 2,
-    name: "Liam Brown",
-    subject: "Physics",
-    rating: 4.6,
-    bio: "Physics expert who simplifies complex topics with real-world examples.",
-    image: "https://randomuser.me/api/portraits/men/44.jpg"
-  },
-  {
-    id: 3,
-    name: "Olivia Green",
-    subject: "English Literature",
-    rating: 4.9,
-    bio: "Helping students fall in love with literature through interactive lessons.",
-    image: "https://randomuser.me/api/portraits/women/68.jpg"
-  },
-  {
-    id: 4,
-    name: "Noah Smith",
-    subject: "Chemistry",
-    rating: 4.5,
-    bio: "Chemistry tutor focused on building strong foundational knowledge.",
-    image: "https://randomuser.me/api/portraits/men/33.jpg"
-  }
-];
+// const tutorsData = [
+//   {
+//     id: 1,
+//     name: "Emma Watson",
+//     subject: "Mathematics",
+//     rating: 4.8,
+//     bio: "Experienced math tutor with a passion for helping students grasp difficult concepts.",
+//     image: "https://randomuser.me/api/portraits/women/65.jpg"
+//   },
+//   {
+//     id: 2,
+//     name: "Liam Brown",
+//     subject: "Physics",
+//     rating: 4.6,
+//     bio: "Physics expert who simplifies complex topics with real-world examples.",
+//     image: "https://randomuser.me/api/portraits/men/44.jpg"
+//   },
+//   {
+//     id: 3,
+//     name: "Olivia Green",
+//     subject: "English Literature",
+//     rating: 4.9,
+//     bio: "Helping students fall in love with literature through interactive lessons.",
+//     image: "https://randomuser.me/api/portraits/women/68.jpg"
+//   },
+//   {
+//     id: 4,
+//     name: "Noah Smith",
+//     subject: "Chemistry",
+//     rating: 4.5,
+//     bio: "Chemistry tutor focused on building strong foundational knowledge.",
+//     image: "https://randomuser.me/api/portraits/men/33.jpg"
+//   }
+// ];
 
 const Tutors = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -44,7 +44,7 @@ const Tutors = () => {
 
   const [tutors,setTutors]=useState([])
    // get all available sessions
-    const { data, isPending, isError, error } = useQuery({
+    const { data, isPending, isError, error,refetch } = useQuery({
       queryKey: ["tutors"],
       queryFn: () => apiRequiest("get", "/tutors"),
       refetchOnWindowFocus: true,
@@ -67,6 +67,50 @@ const Tutors = () => {
 
         const uniqueSubjects = []
 
+
+        // search tutors fucntionality
+
+         const refetchFunction = async()=>{
+        const result = await refetch(); 
+        
+           
+            if (result.data?.tutors) {
+              setTutors(result.data.tutors);
+            }
+        }
+          const handleSearch = (value)=>{
+              setSearchTerm(value)
+              searchFunctionality(value.trim())
+            }
+          
+            const [filterLoading,setFilterLoading] = useState(false);
+          
+            let interval;
+               const searchFunctionality=async(searchValue)=>{ 
+                clearTimeout(interval)
+                if (!searchValue) {
+                  refetchFunction()
+                  return;
+                }
+                 setFilterLoading(true)
+            
+                   interval = setTimeout(async() => {
+                    
+                   try {
+                     const data = await apiRequiest('get',`/tutors/search?name=${searchValue}`)
+                    
+                     setTutors(data?.tutors)
+              
+                     } catch (error) {
+                       setTutors([])
+                       toast.error(error?.response?.data?.message)
+                       
+                     }finally{
+                      setFilterLoading(false)
+                     }
+                  }, 1000); 
+               }
+
   return (
     <section className="min-h-screen bg-gray-50 py-10  ">
       <div className="max-w-7xl mx-auto px-4">
@@ -82,7 +126,7 @@ const Tutors = () => {
             <input
               type="text"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => handleSearch(e.target.value)}
               placeholder="Search by name or subject..."
               className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 
               focus:outline-none focus:ring-2 focus:ring-green-600 text-gray-700 placeholder-gray-400"
@@ -107,7 +151,7 @@ const Tutors = () => {
         </div>
 
         {/* Tutors Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        {!filterLoading ? <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {tutors?.map((tutor) => (
             <div
               key={tutor?._id}
@@ -128,7 +172,12 @@ const Tutors = () => {
               </div> */}
             </div>
           ))}
-        </div>
+        </div> : 
+        <div className="min-h-[10vh] w-full flex justify-center items-center">
+          <p className="text-green-600">Loading...</p>
+      </div>
+        }
+
       </div>
     </section>
   );
