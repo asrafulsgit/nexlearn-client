@@ -26,6 +26,7 @@ import StudentAuth from "../middlewares/StudentAuth";
 import TutorAuth from "../middlewares/TutorAuth";
 import AdminAuth from "../middlewares/AdminAuth";
 import UnAuth from "../middlewares/UnAuth";
+import PaymentSuccess from "../components/users/payment/PaymentSuccess";
 
 
 
@@ -118,6 +119,10 @@ const Router = createBrowserRouter([
                 path : 'manage-tutors', 
                 element : <AdminAuth> <ManageTutors /> </AdminAuth>
             },
+            {                        
+                path : 'success/:paymentId', 
+                Component :  PaymentSuccess 
+            }
 
 
     //         { 

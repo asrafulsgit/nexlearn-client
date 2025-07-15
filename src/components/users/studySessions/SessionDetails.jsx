@@ -99,9 +99,7 @@ const SessionDetails = () => {
   //   bookedSessions: ["abc123"], 
   // };
 
-  const handlePayment =()=>{
-    console.log('ready to payment')
-  }
+  
 
   // Review form state
   const [rating, setRating] = useState(0);
@@ -118,13 +116,21 @@ const SessionDetails = () => {
        try {
                      await apiRequiestWithCredentials("post", `/booked/book/${id}`);
                      await queryClient.invalidateQueries({ queryKey: ['booked'] });
-                       toast.success("Session Booked.");
+                     toast.success("Session Booked.");
                      } catch (err) {
                        console.log(err)
                        toast.error("Failed to book session");
                      } 
     } else {
-       
+       try {
+                    const data = await apiRequiestWithCredentials("post", `/payment/student/${id}`,{amount : session?.fee});
+                    window.location.href = data?.url;
+                    await queryClient.invalidateQueries({ queryKey: ['payment'] });
+                     toast.success("Payment Created.");
+                     } catch (err) {
+                       console.log(err)
+                       toast.error("Failed to Payment");
+                     } 
     }
    
   };
