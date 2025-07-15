@@ -1,37 +1,42 @@
 import { useContext, useState } from "react";
+import { AuthContext } from "../../controllers/AuthProvider";
+import { apiRequiestWithCredentials } from "../../utilities/handleApis";
+import { queryClient } from "../../utilities/queryclient";
+import { toast } from "react-toastify";
 
 const CreateNote = () => {
-const user = {
-    name: "Asraful",
-    photoURL: "https://i.ibb.co/xhh9JGM/user-avatar.png",
-    email : 'asraful@gmail.com'
-  };
-  const [note, setNote] = useState({
+  const {userInfo}=useContext(AuthContext);
+  const initNote = {
     title: "",
-    description: "",
-  });
-  const [message, setMessage] = useState("");
+    content: "",
+  }
+  const [note, setNote] = useState(initNote);
+  const [postLoading,setPostLoading]=useState(false)
 
   const handleChange = (e) => {
     setNote({ ...note, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
 
-    if (!note.title || !note.description) {
-      return setMessage("All fields are required.");
+    if (!note.title || !note.content) {
+      toast.error("Please fillup required fields.");
+      return;
     }
+    setPostLoading(true)
+    try {
+          await apiRequiestWithCredentials('post','/notes/student',note)
+          await queryClient.invalidateQueries({ queryKey: ['snotes'] });
+          setNote(initNote)
+          toast.success('Note saved successfully!')
+          } catch (error) {
+            console.log(error)
+            toast.error(error?.response?.data?.message)
+        }finally{
+          setPostLoading(false)
+        }
 
-    // Placeholder for saving note to backend
-    console.log({
-      email: user?.email,
-      title: note.title,
-      description: note.description,
-    });
-
-    setMessage("✅ Note saved successfully!");
-    setNote({ title: "", description: "" });
   };
 
   return (
@@ -51,7 +56,7 @@ const user = {
             </label>
             <input
               type="email"
-              value={user?.email || ""}
+              value={userInfo?.email || ""}
               readOnly
               className="w-full px-4 py-3 border border-gray-300 
               outlite-none focus:outline-none
@@ -68,6 +73,7 @@ const user = {
               type="text"
               name="title"
               value={note.title}
+              required
               onChange={handleChange}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600 focus:outline-none"
               placeholder="Enter note title"
@@ -79,9 +85,10 @@ const user = {
               Description <span className="text-red-500">*</span>
             </label>
             <textarea
-              name="description"
-              value={note.description}
+              name="content"
+              value={note.content}
               onChange={handleChange}
+              required
               rows="6"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600 focus:outline-none"
               placeholder="Write your note here..."
@@ -90,14 +97,12 @@ const user = {
 
           <button
             type="submit"
-            className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition"
+            className="w-full cursor-pointer bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition"
           >
-            Save Note
+            {postLoading ? 'Saving...' : 'Save Note'}
           </button>
 
-          {message && (
-            <p className="text-center text-sm text-green-600 mt-2">{message}</p>
-          )}
+          
         </form>
       </div>
     </section>
