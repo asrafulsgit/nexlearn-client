@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet";
+import { toast } from "react-toastify";
 
 const Contact = () => {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
@@ -11,8 +12,7 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Submitted Message:", formData);
-    alert("Message sent successfully!");
+    toast.success('Message sent successfully!')
     setFormData({ name: "", email: "", message: "" });
   };
 

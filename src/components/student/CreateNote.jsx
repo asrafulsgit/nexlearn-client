@@ -32,7 +32,7 @@ const CreateNote = () => {
           setNote(initNote)
           toast.success('Note saved successfully!')
           } catch (error) {
-            console.log(error)
+
             toast.error(error?.response?.data?.message)
         }finally{
           setPostLoading(false)

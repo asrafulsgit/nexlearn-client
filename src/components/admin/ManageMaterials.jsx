@@ -39,7 +39,7 @@ const ManageMaterials = () => {
              setDeleteModal(null);
              toast.success("Material deleted.");
            } catch (err) {
-             console.log(err)
+  
              toast.error("Failed to delete material.");
            }finally{
             setDeleteLoading(false);

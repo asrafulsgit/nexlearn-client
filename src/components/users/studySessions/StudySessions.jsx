@@ -78,7 +78,7 @@ const result = await refetch();
             
            try {
              const data = await apiRequiest('get',`/sessions/user/search?name=${searchValue}`)
-             console.log(data)
+
              setSessions(data?.sessions)
       
              } catch (error) {

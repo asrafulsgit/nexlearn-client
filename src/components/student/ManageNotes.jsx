@@ -54,7 +54,7 @@ const ManageNotes = () => {
                 toast.success("Note updated.");
                 setShowEdit(false);
               } catch (err) {
-                console.log(err)
+        
                 toast.error("Failed to update note");
               }finally{
 setUpdateLoading(false)
@@ -72,7 +72,7 @@ setUpdateLoading(false)
           toast.success("Note deleted.");
           setShowDelete(false);
           } catch (err) {
-            console.log(err)
+           
             toast.error("Failed to delete note");
           }finally{
             setUpdateLoading(false)

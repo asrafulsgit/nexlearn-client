@@ -29,7 +29,7 @@ const SessionDetails = () => {
   // };
 
   const {userInfo}=useContext(AuthContext);
-  console.log(userInfo)
+
   const [session,setSession]=useState(null);
   
   const {id}=useParams();
@@ -89,7 +89,7 @@ const SessionDetails = () => {
                      await queryClient.invalidateQueries({ queryKey: ['booked'] });
                      toast.success("Session Booked.");
                      } catch (err) {
-                       console.log(err)
+           
                        toast.error("Failed to book session");
                      }finally{
       setBookLoading(false);
@@ -136,7 +136,7 @@ try {
                 setRating(0);
                 toast.success("Review posted.");
               } catch (err) {
-                console.log(err)
+           
                 toast.error("Failed to post review.");
               }finally{
                 setPostLoading(false)

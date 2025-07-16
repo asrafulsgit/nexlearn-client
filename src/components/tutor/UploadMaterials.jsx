@@ -86,7 +86,7 @@ const UploadMaterials = () => {
         toast.success("Material uploaded.");
         closeModal();
       } catch (err) {
-        console.log(err)
+
         toast.error("Failed to upload material");
       }finally{
         setUploadLoading(false);

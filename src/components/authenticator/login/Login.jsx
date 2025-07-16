@@ -28,7 +28,7 @@ const [registerLoading,setRegisterLoading]=useState(false)
           toast.success('Login successfull');
           setFormData(initForm);
         } catch (error) {
-          console.log(error)
+
           toast.error(error?.response?.data?.message);
         }finally{
           setRegisterLoading(true)

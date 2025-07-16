@@ -39,7 +39,7 @@ const CreateSession = () => {
       setFormData(initFormData)
       toast.success('Session created.')
       } catch (error) {
-        console.log(error)
+
         toast.error(error?.response?.data?.message)
     }finally{
       setPostLoading(false)

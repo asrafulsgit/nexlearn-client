@@ -69,7 +69,7 @@ const CheckoutForm = () => {
       setProcessing(false);
     }
   } catch (err) {
-    console.error("Payment error", err);
+    
     setError({ message: "Payment failed. Try again." });
     setProcessing(false);
   }

@@ -29,7 +29,7 @@ const ManageSessions = () => {
     }
   }, [data]);
 
-  console.log(data)
+
 
   // handle page change 
   const handlePageChange = async(page) => {
@@ -48,7 +48,7 @@ const ManageSessions = () => {
     setFee(session.fee || 0);
     setApprovalModal(true);
   };
-  // console.log(data?.sessions)
+
   const confirmApprove = async() => {
     setApproveLoading(true);
     try {
@@ -103,7 +103,7 @@ const ManageSessions = () => {
         await queryClient.invalidateQueries({ queryKey: ['tsessions'] });
         toast.success("Session deleted.");
       } catch (err) {
-        console.log(err)
+   
         toast.error("Failed to delete session.");
       } 
    
@@ -128,7 +128,7 @@ const ManageSessions = () => {
         toast.success("Session updated.");
         setRejectionModal(false);
       } catch (err) {
-        console.log(err)
+  
         toast.error("Failed to update session.");
       }finally{
     setApproveLoading(false)

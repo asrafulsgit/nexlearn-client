@@ -35,7 +35,7 @@ const Register = () => {
       setFormData(initForm);
       toast.success('Register successfull');
     } catch (error) {
-      console.log(error)
+
       toast.error(error?.response?.data?.message);
     }finally{
       setRegisterLoading(false)

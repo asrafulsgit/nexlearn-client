@@ -44,7 +44,7 @@ const MyMaterials = () => {
             setEditing(null);
             toast.success("Material updated.");
           } catch (err) {
-            console.log(err)
+      
             toast.error("Failed to update material");
           }finally{
             updateLoading(false);
@@ -60,7 +60,7 @@ const MyMaterials = () => {
             setDeleting(null);
             toast.success("Material deleted.");
           } catch (err) {
-            console.log(err)
+   
             toast.error("Failed to delete material");
           }finally{
             setUpdateLoading(false);

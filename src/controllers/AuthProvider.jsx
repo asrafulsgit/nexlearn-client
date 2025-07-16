@@ -29,7 +29,6 @@ const AuthProvider = ({children})=>{
           setUserInfo(data?.user)
           return true;
         } catch (err) {
-          console.error("Google login failed:", err);
           return false;
         }
     }

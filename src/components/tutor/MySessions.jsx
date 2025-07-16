@@ -41,7 +41,7 @@ const MySessions = () => {
          await queryClient.invalidateQueries({ queryKey: ['tsessions'] });
          toast.success("Approval request sent successfully!");
        } catch (err) {
-        console.log(err)
+
         toast.error("Failed to Approval request");
        } 
   };
