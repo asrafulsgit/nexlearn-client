@@ -46,8 +46,8 @@ const features = [
 
 const PlatformFeatures = () => {
   return (
-    <section id="features" className="py-16 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="features" className="py-10 max-w-7xl mx-auto px-4 bg-white">
+      <div className="">
         <h2 className="text-3xl font-extrabold text-gray-900 text-center mb-4">
           What You Can Do with NexLearn
         </h2>
@@ -55,7 +55,7 @@ const PlatformFeatures = () => {
           Explore the powerful features designed to enhance your learning experience.
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {features.map((feature, index) => (
             <div
               key={index}

@@ -45,8 +45,8 @@ const WhyNexLearn = () => {
   ];
 
   return (
-    <section id="why-nexlearn" className="py-16 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="why-nexlearn" className="max-w-7xl mx-auto px-4 py-10 bg-white">
+      <div className="">
         <h2 className="text-3xl font-extrabold text-gray-900 text-center mb-4">Why Choose NexLearn?</h2>
         <p className="mt-4 text-lg text-gray-600 text-center mb-12">Discover the advantages that set us apart.</p>
         <div className="flex flex-col lg:flex-row items-center lg:space-x-12">

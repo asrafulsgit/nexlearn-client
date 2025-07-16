@@ -36,7 +36,7 @@ const howItWorksSteps = [
     title: "Track Your Progress",
     description: "Monitor your learning journey and achievements.",
     iconBg: "bg-red-100 text-red-600",
-    image: "https://placehold.co/600x400?text=Track+Progress",
+    image: "https://i.ibb.co/q2bVtnZ/istockphoto-2178462005-612x612.jpg",
     icon: (
       <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 17h2a2 2 0 002-2V9a2 2 0 00-2-2H3m6 10h2a2 2 0 002-2V5a2 2 0 00-2-2H9m6 18h2a2 2 0 002-2v-6a2 2 0 00-2-2h-2" />
@@ -48,28 +48,32 @@ const howItWorksSteps = [
 
 const HowItWorks = () => {
   return (
-    <section id="how-it-works" className="py-16 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="how-it-works" className="max-w-7xl mx-auto px-4 py-10 bg-gray-50">
+      <div className="">
         <h2 className="text-3xl font-extrabold text-gray-900 text-center mb-4">How It Works</h2>
         <p className="text-xl text-gray-600 text-center mb-12">Learn how our platform helps you achieve your goals.</p>
 
-        <div className="relative flex flex-col lg:flex-row justify-between items-center lg:space-x-8 space-y-8 lg:space-y-0">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {howItWorksSteps.map((step, index) => (
             <div
-              key={index}
-              className="flex flex-col items-center text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200 flex-1"
-            >
-              <div className={`flex items-center justify-center h-16 w-16 rounded-full mb-4 ${step.iconBg}`}>
-                {step.icon}
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">{step.title}</h3>
-              <p className="text-gray-600">{step.description}</p>
-              <img
-                src={step.image}
-                alt={`${step.title} illustration`}
-                className="mt-4 rounded-lg w-full h-32 object-cover"
-              />
-            </div>
+  key={index}
+  className="flex flex-col h-full justify-between items-center text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200"
+>
+  <div className={`flex items-center justify-center h-16 w-16 rounded-full mb-4 ${step.iconBg}`}>
+    {step.icon}
+  </div>
+  <h3 className="text-xl font-semibold text-gray-900 mb-2">{step.title}</h3>
+  <p className="text-gray-600 mb-4">{step.description}</p>
+
+  <div className="mt-auto w-full">
+    <img
+      src={step.image}
+      alt={`${step.title} illustration`}
+      className="rounded-lg w-full h-32 object-cover"
+    />
+  </div>
+</div>
+
           ))}
         </div>
       </div>

@@ -29,6 +29,7 @@ import UnAuth from "../middlewares/UnAuth";
 import PaymentSuccess from "../components/users/payment/PaymentSuccess";
 import Checkout from "../components/student/payment/Checkout";
 import UserAuth from "../middlewares/UserAuth";
+import MyStudyMaterials from "../components/student/MyStudyMaterials";
 
 
 
@@ -88,6 +89,10 @@ const Router = createBrowserRouter([
             {                        
                 path : 'study-materials', 
                 element : <StudentAuth > <StudyMaterials /> </StudentAuth> 
+            },                            
+            {                        
+                path : 'my-study-materials/:sessionId', 
+                element : <StudentAuth > <MyStudyMaterials /> </StudentAuth> 
             },                            
             {                        
                 path : 'checkout/:sessionId', 

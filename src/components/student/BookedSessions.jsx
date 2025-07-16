@@ -11,7 +11,6 @@ import { dateFormat } from "../../utilities/dateFormate";
 const BookedSessions = () => {
   const [bookedSessions, setBookedSessions] = useState([]);
 
-
    // get all notes created by student
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["booked"],
@@ -20,7 +19,7 @@ const BookedSessions = () => {
     refetchOnMount: 'always'
   });
 
-  // console.log(data)
+
 
   // Update state when data changes
     useEffect(() => {
@@ -69,7 +68,6 @@ const BookedSessions = () => {
             </thead>
             <tbody className="divide-y divide-gray-200">
               {bookedSessions.map((book) =>{
-                console.log(book)
                   return (
                 
                   <tr key={book?._id} className="hover:bg-gray-50">
@@ -88,7 +86,7 @@ const BookedSessions = () => {
                   </td>
                   <td className="px-6 py-4">
                    <Link to={`/session/${book?.session?._id}`}> <button
-                      className="text-white bg-green-600 hover:bg-green-700 px-4 py-2 rounded-md text-sm font-medium transition"
+                      className="text-white cursor-pointer bg-green-600 hover:bg-green-700 px-4 py-2 rounded-md text-sm font-medium transition"
                     >
                       View Details
                     </button></Link>
