@@ -11,23 +11,6 @@ import { getSessionStatus } from "../../../utilities/sessionStatus";
 import { Helmet } from "react-helmet";
 
 const SessionDetails = () => {
-  // const session = {
-  //   _id: "abc123",
-  //   title: "Advanced React Study Group",
-  //   tutorName: "John Doe",
-  //   tutorEmail: "john@example.com",
-  //   averageRating: 4.6,
-  //   description: "This study session focuses on advanced React concepts including hooks, context, and performance optimization.",
-  //   registrationStart: "2025-07-01",
-  //   registrationEnd: "2025-07-20",
-  //   classStart: "2025-07-21T10:00",
-  //   classEnd: "2025-08-21T12:00",
-  //   duration: "1 Month",
-  //   registrationFee: 0,
-  //   image: "https://images.unsplash.com/photo-1701170645257-8345722edf47?crop=entropy&q=80&w=1080",
-  //   status: "Ongoing",
-  // };
-
   const {userInfo}=useContext(AuthContext);
 
   const [session,setSession]=useState(null);
@@ -162,9 +145,9 @@ try {
           {/* <p className="text-yellow-500 font-semibold mt-2">⭐ {session.averageRating} / 5</p> */}
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* session details */}
-          <div className="md:col-span-2">
+          <div className="lg:col-span-2">
             <img src={session?.image} alt="Session" className="w-full h-64 object-cover rounded-lg mb-6" />
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">Description</h2>
             <p className="text-gray-700 mb-6 leading-relaxed">{session?.description}</p>
@@ -195,8 +178,8 @@ try {
           </div>
 
             {/* book session card */}
-           <div className="bg-white p-4 rounded-xl shadow-sm border
-            border-gray-100 flex flex-col justify-between">
+           <div className="lg:col-span-1 sticky top-8  bg-white p-4 rounded-xl shadow-sm border
+            border-gray-100">
             <div className="space-y-3 mb-6">
               <h3 className="text-xl font-bold text-gray-800">Session Info</h3>
               <p>
