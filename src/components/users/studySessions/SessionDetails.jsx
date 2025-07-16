@@ -178,9 +178,9 @@ try {
           </div>
 
             {/* book session card */}
-           <div className="lg:col-span-1 sticky top-8  bg-white p-4 rounded-xl shadow-sm border
+           <div className="lg:col-span-1 sticky top-8">
+            <div className="space-y-3 mb-6 bg-white p-4 rounded-xl shadow-sm border
             border-gray-100">
-            <div className="space-y-3 mb-6">
               <h3 className="text-xl font-bold text-gray-800">Session Info</h3>
               <p>
                 <strong>📅 Registration Start:</strong> {dateFormat(session?.registrationStart)}
@@ -273,6 +273,7 @@ try {
               </div>
             )}
           </div>
+
         </div>
         
       </div>
