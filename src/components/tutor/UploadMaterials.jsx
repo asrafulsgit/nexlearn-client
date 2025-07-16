@@ -235,7 +235,7 @@ const UploadMaterials = () => {
                   type="email"
                   id="tutorEmail"
                   name="tutorEmail"
-                  value={tutorEmail}
+                  value={selectedSession?.tutor?.email}
                   readOnly
                   className="focus:outline-none w-full bg-gray-100 border text-gray-600
                   border-gray-300 rounded px-3 py-2"
