@@ -10,19 +10,33 @@ const ManageSessions = () => {
   const [sessions, setSessions] = useState([]);
   const [selectedSession, setSelectedSession] = useState(null);
   const [fee, setFee] = useState("");
-  
+
+  const [activePage, setActivePage] = useState(1);
+  const [totalPages,setTotalPages]=useState(0);
+  const [limit,setLimit]=useState(5);
 
   // get all pending sessions
   const {data, isPending, isError, error,isFetching} = useQuery({
-    queryKey: ['tsessions'],
-    queryFn: () => apiRequiestWithCredentials('get', '/sessions/admin'),
+    queryKey: ['tsessions',activePage],
+    queryFn: () => apiRequiestWithCredentials('get', `/sessions/admin?page=${activePage}&limit=${limit}`),
    refetchOnMount: 'always'
   });
   useEffect(() => {
     if (data?.sessions) {
       setSessions(data.sessions);
+      setTotalPages(data?.totalPages || 0);
     }
   }, [data]);
+
+  console.log(data)
+
+  // handle page change 
+  const handlePageChange = async(page) => {
+    setActivePage(page);
+    if (page >= 1 && page <= totalPages && page !== activePage) {
+      setActivePage(page);
+    }
+  };
   
    // approve  setting
    const [approvalModal, setApprovalModal] = useState(false);
@@ -140,6 +154,7 @@ if(isPending || !data){
         </div>
 
       {isFetching ? <Fetching />  :  
+      <>
       <div className="overflow-x-auto">
           <table className="min-w-[800px] w-full  text-sm bg-white rounded shadow">
             <thead className="bg-green-100 text-gray-700">
@@ -152,8 +167,8 @@ if(isPending || !data){
               </tr>
             </thead>
             <tbody>
-              {sessions.length !== 0 ?   
-              sessions.map((session) => (
+                
+             { sessions.map((session) => (
                 <tr key={session?._id} className="border-t border-gray-200 hover:bg-gray-50">
                   <td className="px-4 py-3">{session?.title}</td>
                   <td className="px-4 py-3">{session?.tutor?.name}</td>
@@ -195,15 +210,57 @@ if(isPending || !data){
                     ) : '-'}
                   </td>
                 </tr>
-              )) : 
-
-               <div className=" w-full text-center flex justify-center items-center">
-          <p className="text-green-600">No session available.</p>
-        </div> }
+              )) }
             </tbody>
           </table>
         </div>
+
+      {/* pagination   */}
+      {totalPages > 1 && (
+        <div className="flex justify-center mt-16">
+          <nav className="inline-flex items-center space-x-2 text-sm">
+            <button
+              onClick={() => handlePageChange(activePage - 1)}
+              disabled={activePage === 1}
+              className="px-4 cursor-pointer py-2 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+            >
+              Previous
+            </button>
+
+            {[...Array(totalPages)].map((_, index) => {
+              const page = index + 1;
+              return (
+                <button
+                  key={page}
+                  onClick={() => handlePageChange(page)}
+                  className={`px-4 cursor-pointer py-2 rounded-md border ${
+                    activePage === page
+                      ? "bg-green-600 text-white border-green-600"
+                      : "bg-white text-gray-700 hover:bg-gray-100 border-gray-300"
+                  }`}
+                >
+                  {page}
+                </button>
+              );
+            })}
+
+            <button
+              onClick={() => handlePageChange(activePage + 1)}
+              disabled={activePage === totalPages}
+              className="px-4 cursor-pointer py-2 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+            >
+              Next
+            </button>
+          </nav>
+        </div>
+      )}
+      
+      </>
       }
+
+
+
+
       </div>
 
       {/* Approval Modal */}
@@ -319,6 +376,8 @@ if(isPending || !data){
           </div>
         </div>
       )}
+
+      
     </>
   );
 };

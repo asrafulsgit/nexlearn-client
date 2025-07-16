@@ -187,7 +187,7 @@ if(isPending || !data){
             </tr>
           </thead>
           <tbody>
-  {users.length !== 0 ?  
+  {  
   users.map((user) => (
     <tr key={user._id || user.id} className="border-b border-gray-200">
       <td className="px-4 py-3">
@@ -211,24 +211,15 @@ if(isPending || !data){
         </select>
       </td>
     </tr>
-  )) : 
-
-  <div className="text-center w-full flex justify-center items-center">
-          <p className="text-green-600">No user available.</p>
-        </div>
-
-}
+  )) }
 </tbody>
 
         </table>
-
-        {users.length === 0 && (
-          <div className="p-6 text-center text-gray-500">No users found</div>
-        )}
-      </div> : 
+      </div> 
+    : 
       <div className="min-h-[10vh] w-full flex justify-center items-center">
           <p className="text-green-600">Loading...</p>
-      </div>
+      </div> 
       }
     </div>
 

@@ -12,7 +12,7 @@ const StudySessions= () => {
   const [sessions, setSessions] = useState([]);
   const [activePage, setActivePage] = useState(1);
   const [totalPages,setTotalPages]=useState(0);
-  const [limit,setLimit]=useState(3);
+  const [limit,setLimit]=useState(5);
   const [search,setSearch]=useState('');
 
    // get all notes created by student
