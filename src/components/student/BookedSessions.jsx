@@ -1,38 +1,46 @@
 import { useEffect, useState } from "react";
+import { apiRequiestWithCredentials } from "../../utilities/handleApis";
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import Loader from "../../additionals/Loader";
+import { Link } from "react-router";
+import { dateFormat } from "../../utilities/dateFormate";
 
-const dummySessions = [
-  {
-    id: "1",
-    title: "React Basics",
-    date: "2025-07-22",
-    tutor: "John Carter",
-    fee: 0,
-    image: "https://i.ibb.co/KD9kTGN/react.jpg"
-  },
-  {
-    id: "2",
-    title: "Advanced Python",
-    date: "2025-07-28",
-    tutor: "Jane Smith",
-    fee: 25,
-    image: "https://i.ibb.co/qmMb0GN/python.jpg"
-  },
-  {
-    id: "3",
-    title: "Web Security Essentials",
-    date: "2025-08-01",
-    tutor: "Alice Monroe",
-    fee: 15,
-    image: "https://i.ibb.co/mq1x57S/security.jpg"
-  }
-];
+
 
 const BookedSessions = () => {
   const [bookedSessions, setBookedSessions] = useState([]);
 
-  useEffect(() => {
-    setBookedSessions(dummySessions);
-  }, []);
+
+   // get all notes created by student
+  const { data, isPending, isError, error } = useQuery({
+    queryKey: ["booked"],
+    queryFn: () => apiRequiestWithCredentials("get", "/booked/my-bookings"),
+    refetchOnWindowFocus: true,
+    refetchOnMount: 'always'
+  });
+
+  // console.log(data)
+
+  // Update state when data changes
+    useEffect(() => {
+      if (data?.bookings) {
+        setBookedSessions(data.bookings);
+      }
+    }, [data]);
+   
+    // Handle error toast outside render
+      useEffect(() => {
+        if (isError) {
+          toast.error(error?.response?.data?.message || "Failed to fetch notes");
+        }
+      }, [isError, error]);
+
+
+// load page when data fateching 
+  if (isPending) {
+    return <Loader />;
+  }
 
   return (
     <section className="max-w-7xl mx-auto px-4 py-10 min-h-screen
@@ -42,8 +50,10 @@ const BookedSessions = () => {
         View and manage all your enrolled study sessions.
       </p>
 
-      {bookedSessions.length === 0 ? (
+     {bookedSessions.length === 0 ? (
+      <div className="min-h-[10vh] w-full flex justify-center items-center">
         <p className="text-gray-600 mt-10">You haven’t booked any sessions yet.</p>
+        </div>
       ) : (
         <div className="overflow-x-auto bg-white rounded-lg shadow">
           <table className="min-w-[850px] w-full  table-auto text-left text-sm">
@@ -58,31 +68,36 @@ const BookedSessions = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {bookedSessions.map((session) => (
-                <tr key={session.id} className="hover:bg-gray-50">
+              {bookedSessions.map((book) =>{
+                console.log(book)
+                  return (
+                
+                  <tr key={book?._id} className="hover:bg-gray-50">
                   <td className="px-6 py-4">
                     <img
-                      src={session.image}
-                      alt={session.title}
+                      src={book?.session?.image}
+                      alt={book?.session?.title}
                       className="w-12 h-12 rounded object-cover"
                     />
                   </td>
-                  <td className="px-6 py-4 font-medium text-gray-800">{session.title}</td>
-                  <td className="px-6 py-4 text-gray-700">{session.date}</td>
-                  <td className="px-6 py-4 text-gray-700">{session.tutor}</td>
+                  <td className="px-6 py-4 font-medium text-gray-800">{book?.session?.title}</td>
+                  <td className="px-6 py-4 text-gray-700">{dateFormat(book?.session?.classStart)}</td>
+                  <td className="px-6 py-4 text-gray-700">{book?.session?.tutor?.name}</td>
                   <td className="px-6 py-4 text-gray-700">
-                    {session.fee === 0 ? "Free" : `$${session.fee}`}
+                    {book?.session?.fee === 0 ? "Free" : `$${book?.session?.fee}`}
                   </td>
                   <td className="px-6 py-4">
-                    <button
+                   <Link to={`/session/${book?.session?._id}`}> <button
                       className="text-white bg-green-600 hover:bg-green-700 px-4 py-2 rounded-md text-sm font-medium transition"
-                      onClick={() => alert(`Viewing details for ${session.title}`)}
                     >
                       View Details
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                    </button></Link>
+                  </td> 
+                  </tr>
+                )
+                 
+                }
+              )}
             </tbody>
           </table>
         </div>

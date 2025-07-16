@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { apiRequiestWithCredentials } from "../../../utilities/handleApis";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { toast } from "react-toastify";
 import Loader from "../../../additionals/Loader";
 import { dateFormat } from "../../../utilities/dateFormate";
@@ -32,7 +32,7 @@ const SessionDetails = () => {
   
   const {id}=useParams();
    
-  // get all notes created by student
+  // set session details
     const { data, isPending, isError, error } = useQuery({
       queryKey: ["tsessions",id],
       queryFn: () => apiRequiestWithCredentials("get", `/sessions/user/${id}`),
@@ -65,36 +65,14 @@ const SessionDetails = () => {
 
     
   
-  const allReviews = [
-    {
-      sessionId: "abc123",
-      student: "Jane Smith",
-      rating: 5,
-      comment: "Excellent session! Learned a lot.",
-      date: "2025-07-05",
-    },
-    {
-      sessionId: "abc123",
-      student: "Alex Johnson",
-      rating: 4,
-      comment: "Very informative and well-organized.",
-      date: "2025-07-06",
-    },
-    {
-      sessionId: "xyz789",
-      student: "Another Student",
-      rating: 3,
-      comment: "Different session.",
-      date: "2025-07-04",
-    },
-  ];
+  
 
   // Filter reviews for this session
   
 
 
   
-
+   const navigate = useNavigate();
   const handleBooking = async() => {
     const status = getSessionStatus(session?.registrationStart, session?.registrationEnd);
     if(isBookedData.isBooked && status !== 'Open'){
@@ -111,15 +89,18 @@ const SessionDetails = () => {
                        toast.error("Failed to book session");
                      } 
     } else {
-       try {
-                    const data = await apiRequiestWithCredentials("post", `/payment/student/${id}`,{amount : session?.fee});
-                    window.location.href = data?.url;
-                    await queryClient.invalidateQueries({ queryKey: ['payment'] });
-                     toast.success("Payment Created.");
-                     } catch (err) {
-                       console.log(err)
-                       toast.error("Failed to Payment");
-                     } 
+      
+      navigate(`/checkout/${id}`)
+
+      //  try {
+      //               const data = await apiRequiestWithCredentials("post", `/payment/student/${id}`,{amount : session?.fee});
+      //               window.location.href = data?.url;
+      //               await queryClient.invalidateQueries({ queryKey: ['payment'] });
+      //                toast.success("Payment Created.");
+      //                } catch (err) {
+      //                  console.log(err)
+      //                  toast.error("Failed to Payment");
+      //                } 
     }
    
   };
@@ -165,16 +146,6 @@ try {
               }
 
   }
-
-  const reviewedFucntion =(email)=>{
-    const isReviewed = reviews?.find(r => r.student.email === email)
-    if(isReviewed){
-      return false;
-    }
-    return true;
-  }
- 
-
 
 // load page when data fateching 
   if (isPending || session === null || bookPending || isReviewPending) {

@@ -27,6 +27,8 @@ import TutorAuth from "../middlewares/TutorAuth";
 import AdminAuth from "../middlewares/AdminAuth";
 import UnAuth from "../middlewares/UnAuth";
 import PaymentSuccess from "../components/users/payment/PaymentSuccess";
+import Checkout from "../components/student/payment/Checkout";
+import UserAuth from "../middlewares/UserAuth";
 
 
 
@@ -45,7 +47,7 @@ const Router = createBrowserRouter([
             },
             { 
                 path : 'session/:id',
-                Component : SessionDetails 
+                element :<UserAuth> <SessionDetails /> </UserAuth>   
             },
             { 
                 path : 'tutors',
@@ -86,6 +88,10 @@ const Router = createBrowserRouter([
             {                        
                 path : 'study-materials', 
                 element : <StudentAuth > <StudyMaterials /> </StudentAuth> 
+            },                            
+            {                        
+                path : 'checkout/:sessionId', 
+                element : <StudentAuth > <Checkout /> </StudentAuth> 
             },                              // tutor auth pages
             {                        
                 path : 'create-session', 
