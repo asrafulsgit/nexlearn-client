@@ -159,7 +159,7 @@ const CreateSession = () => {
                  bg-gray-100 text-gray-600 focus:outline-none"
               />
             </div>
-            <div>
+            {/* <div>
               <label className="block font-medium mb-1">Status</label>
               <input
                 name="status"
@@ -167,7 +167,7 @@ const CreateSession = () => {
                 readOnly
                 className="w-full p-3 rounded border focus:outline-none border-gray-200 bg-gray-100 text-gray-600"
               />
-            </div>
+            </div> */}
             <div>
               <label className="block font-medium mb-1">Tutor Name</label>
               <input
@@ -177,9 +177,7 @@ const CreateSession = () => {
                 className="w-full p-3 rounded border focus:outline-none border-gray-200 bg-gray-100 text-gray-600"
               />
             </div>
-          </div>
-
-          <div>
+            <div>
             <label className="block font-medium mb-1">Tutor Email</label>
             <input
               name="tutorEmail"
@@ -188,6 +186,9 @@ const CreateSession = () => {
               className="w-full focus:outline-none p-3 rounded border border-gray-200 bg-gray-100 text-gray-600"
             />
           </div>
+          </div>
+
+          
 
           <button
             type="submit"

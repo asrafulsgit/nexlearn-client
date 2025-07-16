@@ -28,6 +28,7 @@ const SessionDetails = () => {
   // };
 
   const {userInfo}=useContext(AuthContext);
+  console.log(userInfo)
   const [session,setSession]=useState(null);
   
   const {id}=useParams();
@@ -73,6 +74,7 @@ const SessionDetails = () => {
 
   
    const navigate = useNavigate();
+   const [bookLoading,setBookLoading]=useState(false);
   const handleBooking = async() => {
     const status = getSessionStatus(session?.registrationStart, session?.registrationEnd);
     if(isBookedData.isBooked && status !== 'Open'){
@@ -80,6 +82,7 @@ const SessionDetails = () => {
     }
 
     if (session?.fee === 0) {
+      setBookLoading(true);
        try {
                      await apiRequiestWithCredentials("post", `/booked/book/${id}`);
                      await queryClient.invalidateQueries({ queryKey: ['booked'] });
@@ -87,20 +90,13 @@ const SessionDetails = () => {
                      } catch (err) {
                        console.log(err)
                        toast.error("Failed to book session");
-                     } 
+                     }finally{
+      setBookLoading(false);
+
+                     }
     } else {
       
-      navigate(`/checkout/${id}`)
-
-      //  try {
-      //               const data = await apiRequiestWithCredentials("post", `/payment/student/${id}`,{amount : session?.fee});
-      //               window.location.href = data?.url;
-      //               await queryClient.invalidateQueries({ queryKey: ['payment'] });
-      //                toast.success("Payment Created.");
-      //                } catch (err) {
-      //                  console.log(err)
-      //                  toast.error("Failed to Payment");
-      //                } 
+      navigate(`/checkout/${id}?price=${session?.fee}`)
     }
    
   };
@@ -223,14 +219,14 @@ try {
             const {isBooked} = isBookedData;
             return( 
             <button
-              disabled={isBooked || status === 'Closed' || status === 'Upcoming'}
+              disabled={isBooked || userInfo?.role === 'tutor' || userInfo?.role === 'admin' || status === 'Closed' || status === 'Upcoming'}
               onClick={handleBooking}
-              className={`w-full py-3 px-4 text-white font-semibold rounded-lg transition duration-300 text-center mt-4 ${
-                status === 'Open' ? "bg-green-600 hover:bg-green-700" : "bg-gray-400 cursor-not-allowed"
-              }`}
+              className={` w-full py-3 px-4 text-white font-semibold rounded-lg transition
+                ${status === 'Open' && userInfo?.role === 'student' ? "bg-green-600 hover:bg-green-700" : "bg-gray-400 cursor-not-allowed"}
+                `}
             >
               {isBooked ? "Already Booked"
-                : !isBooked  && status === "Open"  ? "Book Now" : 
+                : !isBooked  && status === "Open"  ?  bookLoading ? "Booking..." : "Book Now" : 
                 !isBooked  && status === 'Upcoming' ?  "Registration Upcomming "
                 : "Registration Closed"}
             </button>

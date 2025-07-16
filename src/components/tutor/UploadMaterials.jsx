@@ -5,6 +5,7 @@ import Loader from "../../additionals/Loader";
 import { dateFormat } from "../../utilities/dateFormate";
 import { queryClient } from "../../utilities/queryclient";
 import { toast } from "react-toastify";
+import Fetching from "../../additionals/Fetching";
 
 const dummySessions = [
   {
@@ -36,7 +37,7 @@ const UploadMaterials = () => {
   const [sessions,setSessions]=useState([])
   
   // get sessions
-  const {data, isPending, isError, error} = useQuery({
+  const {data, isPending, isError, error,isFetching} = useQuery({
     queryKey: ['tsessions'],
     queryFn: () => apiRequiestWithCredentials('get', '/sessions/tutor/approve'),
     refetchOnWindowFocus: true,
@@ -48,7 +49,7 @@ const UploadMaterials = () => {
   }
 }, [data]);
 
-  if(isPending){
+  if(isPending || !data){
     return  <Loader />;
   }
   
@@ -72,9 +73,10 @@ const UploadMaterials = () => {
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-
+  const [uploadLoading,setUploadLoading]=useState(false)
   const handleSubmit = async(e) => {
     e.preventDefault();
+    setUploadLoading(true)
      try {
       await apiRequiestWithCredentials("post", `/materials/tutor/${selectedSession._id}`, formData);
       await queryClient.invalidateQueries({ queryKey: ['tmaterials'] });
@@ -85,7 +87,9 @@ const UploadMaterials = () => {
       } catch (err) {
         console.log(err)
         toast.error("Failed to upload material");
-      } 
+      }finally{
+        setUploadLoading(false);
+      }
   };
 
   return (
@@ -95,7 +99,9 @@ const UploadMaterials = () => {
         Add images and Google Drive links for your approved study sessions.
       </p>
 
-     {sessions.length > 0 ? <table className="w-full border border-gray-300 rounded-lg overflow-hidden">
+     <div className="overflow-x-auto">
+      {isFetching ? <Fetching /> :  sessions.length > 0 ? 
+     <table className="min-w-[900px] w-full  table-auto text-left">
         <thead className="bg-green-600 text-white">
           <tr>
             <th className="text-left px-4 py-3">Image</th>
@@ -137,6 +143,7 @@ const UploadMaterials = () => {
           <p className="text-green-600">You have no approved session to upload materials.</p>
         </div>
       }
+     </div>
 
       {/* Modal */}
       {modalOpen && (
@@ -257,7 +264,7 @@ const UploadMaterials = () => {
                   type="submit"
                   className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition"
                 >
-                  Upload
+                  {uploadLoading ? 'Uploading...' : 'Upload'}
                 </button>
               </div>
             </form>

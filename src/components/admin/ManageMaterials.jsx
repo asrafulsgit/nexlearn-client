@@ -4,30 +4,16 @@ import { toast } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequiestWithCredentials } from "../../utilities/handleApis";
 import { queryClient } from "../../utilities/queryclient";
+import Fetching from "../../additionals/Fetching";
 
-const initMetials =[
-    {
-      id: 1,
-      title: "Algebra Basics",
-      image: "https://via.placeholder.com/100",
-      sessionTitle: "Mathematics - Session 01",
-      tutorEmail: "tutor1@example.com",
-    },
-    {
-      id: 2,
-      title: "Photosynthesis Notes",
-      image: "https://via.placeholder.com/100",
-      sessionTitle: "Biology - Session 03",
-      tutorEmail: "tutor2@example.com",
-    },
-  ]
+
 
 
 const ManageMaterials = () => {
   const [materials, setMaterials] = useState([]);
 
   // get all pending sessions
-  const {data, isPending, isError, error} = useQuery({
+  const {data, isPending, isError, error,isFetching} = useQuery({
     queryKey: ['tmaterials'],
     queryFn: () => apiRequiestWithCredentials('get', '/materials/admin'),
    refetchOnMount: 'always'
@@ -43,7 +29,9 @@ const ManageMaterials = () => {
 
   const [deleteModal, setDeleteModal] = useState(null);
   const [viewMaterial, setViewMaterial] = useState(null);
+  const [deleteLoading,setDeleteLoading] =useState(false)
   const handleDelete = async(id) => {
+    setDeleteLoading(true);
      try {
              await apiRequiestWithCredentials("delete", `/materials/admin/${id}`);
              await queryClient.invalidateQueries({ queryKey: ['tmaterials'] });
@@ -52,7 +40,9 @@ const ManageMaterials = () => {
            } catch (err) {
              console.log(err)
              toast.error("Failed to delete material.");
-           } 
+           }finally{
+            setDeleteLoading(false);
+           }
  
   };
 
@@ -65,15 +55,16 @@ const ManageMaterials = () => {
   }
   return (
   <> 
-    <div className="max-w-7xl mx-auto px-4 min-h-[70vh]">
-      <div className="my-8">
+    <div className="max-w-7xl mx-auto px-4 py-10 min-h-[70vh]">
+      <div className="">
       <h2 className="text-2xl font-bold mb-1">Manage Study Materials</h2>
       <p className="text-gray-500 ">
         Admin can view and remove outdated or inappropriate materials uploaded by tutors.
       </p>
 </div>
-      <div className="overflow-x-auto">
-      {materials.length >= 0 ? <table className="w-full text-sm bg-white rounded shadow">
+      <div className={`overflow-x-auto ${isFetching && 'mt-10'}`}>
+      {isFetching ? <Fetching />  :  materials.length !== 0 ? 
+      <table className="min-w-[950px] w-full mt-10 text-sm bg-white rounded shadow">
           <thead className="bg-green-100 text-gray-700">
             <tr>
               <th className="px-4 py-3 text-left">Image</th>
@@ -109,7 +100,8 @@ const ManageMaterials = () => {
               </tr>
             ))}
           </tbody>
-        </table>:
+        </table>
+        :
         <div className="min-h-[10vh] w-full flex justify-center items-center">
           <p className="text-green-600">No materials available</p>
         </div>
@@ -158,7 +150,7 @@ const ManageMaterials = () => {
                 onClick={() => handleDelete(deleteModal)}
                 className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
               >
-                Confirm Delete
+              {deleteLoading ? 'Deleting...' :  'Confirm Delete'}
               </button>
             </div>
           </div>

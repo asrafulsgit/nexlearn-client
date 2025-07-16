@@ -4,6 +4,7 @@ import { apiRequiestWithCredentials } from "../../utilities/handleApis";
 import Loader from "../../additionals/Loader";
 import { toast } from "react-toastify";
 import { queryClient } from "../../utilities/queryclient";
+import Fetching from "../../additionals/Fetching";
 
 
 
@@ -18,7 +19,7 @@ const ManageNotes = () => {
 
 
   // get all notes created by student
-  const { data, isPending, isError, error } = useQuery({
+  const { data, isPending, isError, error,isFetching } = useQuery({
     queryKey: ["snotes"],
     queryFn: () => apiRequiestWithCredentials("get", "/notes/student"),
     refetchOnWindowFocus: true,
@@ -42,7 +43,9 @@ const ManageNotes = () => {
 
 
   // update note settings
+  const [updaleLoading,setUpdateLoading]=useState(false)
   const handleUpdate = async(id) => {
+    setUpdateLoading(true)
      try {
               await apiRequiestWithCredentials("put", `/notes/student/${id}`, editNote);
               await queryClient.invalidateQueries({ queryKey: ['snotes'] });
@@ -52,11 +55,15 @@ const ManageNotes = () => {
               } catch (err) {
                 console.log(err)
                 toast.error("Failed to update note");
-              } 
+              }finally{
+setUpdateLoading(false)
+              }
     
   };
 
+  
   const handleDelete = async() => {
+    setUpdateLoading(true)
      try {
           await apiRequiestWithCredentials("delete", `/notes/student/${deleteId}`);
           await queryClient.invalidateQueries({ queryKey: ['snotes'] });
@@ -66,7 +73,9 @@ const ManageNotes = () => {
           } catch (err) {
             console.log(err)
             toast.error("Failed to delete note");
-          } 
+          }finally{
+            setUpdateLoading(false)
+          }
 
 
   };
@@ -74,15 +83,15 @@ const ManageNotes = () => {
 
 
   // load page when data fateching 
-  if (isPending) {
+  if (isPending || !data) {
     return <Loader />;
   }
   return (
-    <section className="min-h-screen  py-10 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4">
+    <section className="min-h-screen  max-w-7xl mx-auto px-4  py-10 bg-gray-50">
+      <div className="">
         <h2 className="text-3xl font-bold text-gray-800 mb-6">Manage Your Notes</h2>
-       {notes.length > 0 ? <div className="overflow-x-auto bg-white shadow rounded-lg">
-          <table className="min-w-[900px] w-full table-auto">
+       {isFetching ? <Fetching />  :   notes.length > 0 ? <div className="overflow-x-auto bg-white shadow rounded-lg">
+          <table className="min-w-[700px] w-full table-auto">
             <thead className="bg-gray-100 text-gray-600 text-left text-sm uppercase tracking-wider">
               <tr>
                 <th className="px-6 py-4">Title</th>
@@ -190,7 +199,7 @@ const ManageNotes = () => {
                   onClick={()=>handleUpdate(editNote?._id)}
                   className="cursor-pointer px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
                 >
-                  Update
+                  {updaleLoading ?'Updating...' : 'Update'}
                 </button>
               </div>
             </div>
@@ -216,7 +225,7 @@ const ManageNotes = () => {
                   onClick={handleDelete}
                   className="cursor-pointer px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
                 >
-                  Confirm
+                  {updaleLoading ? 'Deleting...': 'Confirm'}
                 </button>
               </div>
             </div>

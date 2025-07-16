@@ -4,6 +4,7 @@ import { apiRequiestWithCredentials } from '../../utilities/handleApis';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import Loader from '../../additionals/Loader';
+import Fetching from '../../additionals/Fetching';
 
 const MyStudyMaterials = () => {
     const {sessionId}=useParams();
@@ -69,10 +70,7 @@ const MyStudyMaterials = () => {
             </h3>
 
             {
-            isFetching ? (
-           <div className="w-full flex justify-center items-center">
-         <p className="text-sm text-gray-400 mb-4">Refreshing materials...</p>  </div>      
-        ) :  materials.length === 0 ?
+            isFetching ? <Fetching /> :  materials.length === 0 ?
             <div className="w-full flex justify-center items-center">
         <p className="text-gray-600 mt-10">You haven’t materials yet.</p>
         </div>

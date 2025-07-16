@@ -5,6 +5,7 @@ import Loader from "../../additionals/Loader";
 import { toast } from "react-toastify";
 import { dateFormat } from "../../utilities/dateFormate";
 import { queryClient } from "../../utilities/queryclient";
+import Fetching from "../../additionals/Fetching";
 
 
 
@@ -12,7 +13,7 @@ const MySessions = () => {
   const [sessions, setSessions] = useState([]);
   const [selectedReason, setSelectedReason] = useState(null);
    
-  const {data, isPending, isError, error} = useQuery({
+  const {data, isPending, isError, error,isFetching} = useQuery({
     queryKey: ['tsessions'],
     queryFn: () => apiRequiestWithCredentials('get', '/sessions/tutor'),
     refetchOnWindowFocus: true,
@@ -24,7 +25,7 @@ const MySessions = () => {
   }
 }, [data]);
 
-  if(isPending){
+  if(isPending || !data){
     return  <Loader />;
   }
   
@@ -51,8 +52,9 @@ const MySessions = () => {
       <h2 className="text-3xl font-bold mb-2 text-gray-800">My Study Sessions</h2>
       <p className="text-gray-600 mb-6">View and manage all of your submitted study sessions.</p>
 
-      {sessions.length > 0 ? <div className="overflow-x-auto rounded-lg shadow">
-        <table className="min-w-full bg-white text-sm text-left">
+      {isFetching ? <Fetching /> : sessions.length > 0 ? 
+      <div className="overflow-x-auto rounded-lg shadow">
+        <table className="min-w-[950px] w-full bg-white text-sm text-left">
           <thead className="bg-green-600 text-white uppercase">
             <tr>
               <th className="px-6 py-3">Image</th>

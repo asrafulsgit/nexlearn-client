@@ -1,11 +1,15 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../../controllers/AuthProvider";
-import { Link, useParams } from "react-router";
+import { Link, useParams, useSearchParams } from "react-router";
 import { apiRequiestWithCredentials } from "../../../utilities/handleApis";
 
 const CheckoutForm = () => {
   const { userInfo } = useContext(AuthContext);
+   const [searchParams] = useSearchParams();
+
+  // Get individual query parameters
+  const price = searchParams.get('price');
   const { sessionId } = useParams();
   const stripe = useStripe();
   const elements = useElements();
@@ -144,7 +148,7 @@ const CheckoutForm = () => {
           {error && <ErrorMessage>{error.message}</ErrorMessage>}
 
           <SubmitButton processing={processing} error={error} disabled={!stripe}>
-            Pay $25
+            Pay ${price}
           </SubmitButton>
         </form>
       )}

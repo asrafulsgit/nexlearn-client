@@ -4,6 +4,7 @@ import { apiRequiestWithCredentials } from "../../utilities/handleApis";
 import { toast } from "react-toastify";
 import Loader from "../../additionals/Loader";
 import { Link } from "react-router";
+import Fetching from "../../additionals/Fetching";
 
 const StudyMaterials = () => {
   const [activeSessionId, setActiveSessionId] = useState(null);
@@ -48,20 +49,14 @@ const StudyMaterials = () => {
   }
 
   return (
-    <section className="px-6 py-10 bg-gray-50 min-h-screen">
-      <div className="max-w-6xl mx-auto">
+    <section className="max-w-7xl mx-auto px-4 py-10 bg-gray-50 min-h-screen">
+      <div className="">
         <h2 className="text-3xl font-bold mb-6 text-gray-800">Study Materials</h2>
         <p className="text-gray-600 mb-8">
           Select one of your booked sessions to view its study materials.
         </p>
-
-        {/* Optional subtle refetching indicator */}
-        {}
-
-        {isFetching ? (
-           <div className="w-full flex justify-center items-center">
-         <p className="text-sm text-gray-400 mb-4">Refreshing sessions...</p>  </div>      
-        ) : bookedSessions.length === 0 ? (
+      
+        {isFetching ? <Fetching /> : bookedSessions.length === 0 ? (
           <div className=" w-full flex justify-center items-center">
             <p className="text-gray-600 mt-10">You haven’t booked any sessions yet.</p>
           </div>

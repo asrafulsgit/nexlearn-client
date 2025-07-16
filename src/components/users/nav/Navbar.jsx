@@ -28,10 +28,11 @@ const Navbar = () => {
           setUserInfo(null)
           setIsLoggedIn(false)
           toast.success('User logout successfull')
-         navigate('/', { replace: true });
-          setLoading(false)
+          navigate('/');
+         
         } catch (error) {
           toast.error(error?.response?.data?.message)
+        }finally{
           setLoading(false)
         }
     }
@@ -179,7 +180,7 @@ const Navbar = () => {
 
           {/* Logo */}
           <Link to="/" className="flex-shrink-0 flex items-center">
-            <img className="h-15 w-auto" src={logoImage1} alt="NexLearn Logo" />
+            <img className="h-12 sm:h-15 w-auto" src={logoImage1} alt="NexLearn Logo" />
           </Link>
 
           {/* Desktop Navigation */}
@@ -208,9 +209,10 @@ const Navbar = () => {
             ))}
           </div>
 
-          <div className="relative ml-6 flex items-center" ref={dropdownRef}>
+          <div className="relative  flex items-center" ref={dropdownRef}>
             {!isLoggedIn ? (
               <>
+               
                 <Link to="login">
                   <button
                     type="button"
@@ -232,7 +234,7 @@ const Navbar = () => {
                   >
                     Register
                   </button>
-                </Link>
+                </Link> 
               </>
             ) : (
               <>

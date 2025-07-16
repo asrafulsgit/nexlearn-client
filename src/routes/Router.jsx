@@ -30,6 +30,9 @@ import PaymentSuccess from "../components/users/payment/PaymentSuccess";
 import Checkout from "../components/student/payment/Checkout";
 import UserAuth from "../middlewares/UserAuth";
 import MyStudyMaterials from "../components/student/MyStudyMaterials";
+import PrivacyPolicy from "../components/users/others/PrivacyPolicy";
+import TermsAndConditions from "../components/users/others/TermsAndConditions";
+import Accessibility from "../components/users/others/Accessibility";
 
 
 
@@ -133,7 +136,19 @@ const Router = createBrowserRouter([
             {                        
                 path : 'success/:paymentId', 
                 Component :  PaymentSuccess 
-            }
+            },              // others pages
+            {                        
+                path : 'privacy-policy', 
+                Component :  PrivacyPolicy 
+            },
+            {                        
+                path : 'terms', 
+                Component :  TermsAndConditions 
+            },
+            {                        
+                path : 'accessibility', 
+                Component :  Accessibility 
+            },
 
 
     //         { 

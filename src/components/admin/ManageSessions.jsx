@@ -4,6 +4,7 @@ import { apiRequiestWithCredentials } from "../../utilities/handleApis";
 import Loader from "../../additionals/Loader";
 import { toast } from "react-toastify";
 import { queryClient } from "../../utilities/queryclient";
+import Fetching from "../../additionals/Fetching";
 
 const ManageSessions = () => {
   const [sessions, setSessions] = useState([]);
@@ -12,7 +13,7 @@ const ManageSessions = () => {
   
 
   // get all pending sessions
-  const {data, isPending, isError, error} = useQuery({
+  const {data, isPending, isError, error,isFetching} = useQuery({
     queryKey: ['tsessions'],
     queryFn: () => apiRequiestWithCredentials('get', '/sessions/admin'),
    refetchOnMount: 'always'
@@ -25,6 +26,7 @@ const ManageSessions = () => {
   
    // approve  setting
    const [approvalModal, setApprovalModal] = useState(false);
+   const [approveLoading,setApproveLoading]=useState(false);
   
   const handleApprove = (session) => {
     setSelectedSession(session);
@@ -33,6 +35,7 @@ const ManageSessions = () => {
   };
   // console.log(data?.sessions)
   const confirmApprove = async() => {
+    setApproveLoading(true);
     try {
         await apiRequiestWithCredentials("put", `/sessions/admin/approve/${selectedSession._id}`,{fee});
         setSelectedSession(null);
@@ -42,10 +45,10 @@ const ManageSessions = () => {
         setApprovalModal(false);
       } catch (err) {
         toast.error("Failed to approve session.");
+      }finally{
+        setApproveLoading(false);
       } 
 
-    
-    
   };
 
   // rejection  setting
@@ -63,6 +66,7 @@ const ManageSessions = () => {
       toast.error("Rejection reason required.");
       return;
     }
+    setApproveLoading(true)
     try {
         await apiRequiestWithCredentials("put", `/sessions/admin/reject/${selectedSession._id}`,{rejectionReason,rejectionFeedback});
         setSelectedSession(null);
@@ -73,6 +77,8 @@ const ManageSessions = () => {
         setRejectionModal(false);
       } catch (err) {
         toast.error("Failed to reject session.");
+      }finally{
+        setApproveLoading(false);
       } 
   };
   // delete model setting
@@ -98,6 +104,7 @@ const ManageSessions = () => {
   };
 
   const confirmEdit = async() => {
+    setApproveLoading(true)
     try {
         await apiRequiestWithCredentials("put", `/sessions/admin/${selectedSession._id}`,editData);
         setEditModal(false);
@@ -108,13 +115,16 @@ const ManageSessions = () => {
       } catch (err) {
         console.log(err)
         toast.error("Failed to update session.");
-      } 
+      }finally{
+    setApproveLoading(false)
+        
+      }
     
   };
 
 
     
-if(isPending){
+if(isPending || !data){
     return <Loader />;
   }
   if(isError){
@@ -129,8 +139,9 @@ if(isPending){
           <p className="text-gray-500">Approve, reject, update, or delete sessions.</p>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm bg-white rounded shadow">
+      {isFetching ? <Fetching />  :  
+      <div className="overflow-x-auto">
+          <table className="min-w-[800px] w-full  text-sm bg-white rounded shadow">
             <thead className="bg-green-100 text-gray-700">
               <tr>
                 <th className="px-4 py-3 text-left">Title</th>
@@ -141,7 +152,8 @@ if(isPending){
               </tr>
             </thead>
             <tbody>
-              {sessions.map((session) => (
+              {sessions.length !== 0 ?   
+              sessions.map((session) => (
                 <tr key={session?._id} className="border-t border-gray-200 hover:bg-gray-50">
                   <td className="px-4 py-3">{session?.title}</td>
                   <td className="px-4 py-3">{session?.tutor?.name}</td>
@@ -183,10 +195,15 @@ if(isPending){
                     ) : '-'}
                   </td>
                 </tr>
-              ))}
+              )) : 
+
+               <div className=" w-full text-center flex justify-center items-center">
+          <p className="text-green-600">No session available.</p>
+        </div> }
             </tbody>
           </table>
         </div>
+      }
       </div>
 
       {/* Approval Modal */}
@@ -216,7 +233,7 @@ if(isPending){
                 className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
                 onClick={confirmApprove}
               >
-                Confirm Approve
+              {approveLoading ? 'Approving...' :  'Confirm Approve'}
               </button>
             </div>
           </div>
@@ -249,7 +266,7 @@ if(isPending){
                 className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
                 onClick={confirmEdit}
               >
-                Save Changes
+             {approveLoading ? 'Saving...' :   'Save Changes'}
               </button>
             </div>
           </div>
@@ -295,7 +312,7 @@ if(isPending){
                 className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded"
                 
               >
-                Confirm Reject
+              {approveLoading ? 'Rejecting' :  'Confirm Reject'}
               </button>
             </div>
             </form>

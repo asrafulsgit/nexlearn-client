@@ -4,6 +4,7 @@ import { apiRequiestWithCredentials } from "../../utilities/handleApis";
 import Loader from "../../additionals/Loader";
 import { toast } from "react-toastify";
 import { queryClient } from "../../utilities/queryclient";
+import Fetching from "../../additionals/Fetching";
 
 
 
@@ -16,7 +17,7 @@ const ManageUsers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
 
-  const {data, isPending, isError, error, refetch} = useQuery({
+  const {data, isPending, isError, error, refetch,isFetching} = useQuery({
     queryKey: ['users'],
     queryFn: () => apiRequiestWithCredentials('get', '/admin/users'),
     refetchOnMount: 'always'
@@ -125,7 +126,7 @@ const handleFilter = async(value)=>{
   }
 }, [data]);
   
-if(isPending){
+if(isPending || !data){
     return <Loader />;
   }
   if(isError){
@@ -174,8 +175,9 @@ if(isPending){
         </div>
 
       {/* Users Table */}
-    {!filterLoading ?  <div className="overflow-x-auto bg-white rounded-lg shadow">
-        <table className="w-full table-auto">
+    {isFetching ? <Fetching />  : !filterLoading ? 
+      <div className="overflow-x-auto bg-white rounded-lg shadow">
+        <table className="min-w-[700px] w-full table-auto">
           <thead className="bg-green-600 text-white">
             <tr>
               <th className="text-left px-4 py-3">Image</th>
@@ -185,7 +187,8 @@ if(isPending){
             </tr>
           </thead>
           <tbody>
-  {users.map((user) => (
+  {users.length !== 0 ?  
+  users.map((user) => (
     <tr key={user._id || user.id} className="border-b border-gray-200">
       <td className="px-4 py-3">
         <img
@@ -208,7 +211,13 @@ if(isPending){
         </select>
       </td>
     </tr>
-  ))}
+  )) : 
+
+  <div className="text-center w-full flex justify-center items-center">
+          <p className="text-green-600">No user available.</p>
+        </div>
+
+}
 </tbody>
 
         </table>

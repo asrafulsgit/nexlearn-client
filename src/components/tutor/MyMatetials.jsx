@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import Loader from "../../additionals/Loader";
 import { apiRequiestWithCredentials } from "../../utilities/handleApis";
 import { queryClient } from "../../utilities/queryclient";
+import Fetching from "../../additionals/Fetching";
 
 const MyMaterials = () => {
   const [materials, setMaterials] = useState([]);
@@ -11,7 +12,7 @@ const MyMaterials = () => {
   const [deleting, setDeleting] = useState(null);
 
   // Fetch materials
-  const { data, isPending, isError, error } = useQuery({
+  const { data, isPending, isError, error,isFetching } = useQuery({
     queryKey: ["tmaterials"],
     queryFn: () => apiRequiestWithCredentials("get", "/materials/tutor"),
     refetchOnWindowFocus: true,
@@ -33,8 +34,9 @@ const MyMaterials = () => {
   }, [isError, error]);
 
   // Edit handler
+  const [updateLoading,setUpdateLoading]=useState(false)
   const handleEdit = async(id, updatedMaterial) => {
-    
+    setUpdateLoading(true);
     try {
           await apiRequiestWithCredentials("put", `/materials/tutor/${id}`, updatedMaterial);
           await queryClient.invalidateQueries({ queryKey: ['tmaterials'] });
@@ -43,11 +45,14 @@ const MyMaterials = () => {
           } catch (err) {
             console.log(err)
             toast.error("Failed to update material");
-          } 
+          }finally{
+            updateLoading(false);
+          }
   };
 
   // Delete handler
   const handleDelete = async(id) => {
+    setUpdateLoading(true);
     try {
           await apiRequiestWithCredentials("delete", `/materials/tutor/${id}`);
           await queryClient.invalidateQueries({ queryKey: ['tmaterials'] });
@@ -56,11 +61,13 @@ const MyMaterials = () => {
           } catch (err) {
             console.log(err)
             toast.error("Failed to delete material");
+          }finally{
+            setUpdateLoading(false);
           } 
    
   };
 
-  if (isPending) {
+  if (isPending || !data) {
     return <Loader />;
   }
 
@@ -69,7 +76,8 @@ const MyMaterials = () => {
       <h1 className="text-3xl font-bold mb-6">My Uploaded Materials</h1>
 
       <div className="overflow-x-auto">
-      {materials.length > 0 ?  <table className="min-w-full bg-white rounded-md shadow">
+      {isFetching ? <Fetching /> : materials.length > 0 ?  
+      <table className="min-w-[900px] w-full  table-auto text-left ">
           <thead>
             <tr className="bg-gray-100 text-gray-700 text-left">
               <th className="p-4">Material Image</th>
@@ -155,7 +163,7 @@ const MyMaterials = () => {
                 className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
                 onClick={() => handleEdit(editing?._id, editing)}
               >
-                Save
+                {updateLoading ? 'Saving..' : 'Save'}
               </button>
             </div>
           </div>
@@ -181,7 +189,7 @@ const MyMaterials = () => {
                 className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
                 onClick={() => handleDelete(deleting?._id)}
               >
-                Delete
+               {updateLoading ? 'Deleting...' : 'Delete'}
               </button>
             </div>
           </div>

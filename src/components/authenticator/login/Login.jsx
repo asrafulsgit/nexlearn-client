@@ -15,10 +15,10 @@ const Login = () => {
     setFormData({ ...formData, [name] : value });
   }
     
-
+const [registerLoading,setRegisterLoading]=useState(false)
   const handleSubmit = async(e) => {
     e.preventDefault();
-    
+    setRegisterLoading(true)
     try {
           const data = await apiRequiestWithCredentials('post','/user/login',formData);
           setUserInfo(data?.user);
@@ -29,6 +29,8 @@ const Login = () => {
         } catch (error) {
           console.log(error)
           toast.error(error?.response?.data?.message);
+        }finally{
+          setRegisterLoading(true)
         }
   };
 
@@ -45,8 +47,8 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen  bg-gray-50 py-10">
-      <div className="max-w-7xl px-5 mx-auto  flex flex-col gap-10 md:gap-0
+    <div className="min-h-screen  bg-gray-50 py-10 max-w-7xl px-4 mx-auto">
+      <div className="  flex flex-col gap-10 md:gap-0
     md:flex-row justify-center items-center ">
         {/* Left Side Design */}
       <div className="hidden md:w-1/2 lg:flex items-center 
@@ -67,10 +69,10 @@ const Login = () => {
       </div>
 
       {/* Right Side Form */}
-      <div className="w-2/3 lg:w-1/2 flex items-center justify-center   bg-white">
+      <div className="lg:w-1/2 flex flex-col items-center justify-center   bg-white">
         <div className="w-full  space-y-6">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">
+          <div className="text-left">
+            <h1 className="text-4xl font-bold text-gray-900 mb-2 leading-11">
               Login to Your Account
             </h1>
             <p className="text-gray-600">Access your study sessions easily</p>
@@ -111,7 +113,7 @@ const Login = () => {
               type="submit"
               className="w-full cursor-pointer bg-green-600 text-white py-3 rounded-md font-semibold hover:bg-green-700 transition duration-300"
             >
-              Login
+              {registerLoading ? 'Login...' : 'Login'}
             </button>
           </form>
 

@@ -151,7 +151,8 @@ const Tutors = () => {
         </div>
 
         {/* Tutors Grid */}
-        {!filterLoading ? <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        {!filterLoading ? 
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {tutors?.map((tutor) => (
             <div
               key={tutor?._id}

@@ -20,11 +20,14 @@ const Register = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const [registerLoading,setRegisterLoading]=useState(false)
+
   const handleSubmit = async(e) => {
     e.preventDefault();
     if(!formData.avatar.trim().length){
       formData.avatar = 'https://i.ibb.co/hRGTZWdX/download.jpg'
     }
+    setRegisterLoading(true)
     try {
       await apiRequiest('post','/user/register',formData);
       navigate('/login');
@@ -33,6 +36,8 @@ const Register = () => {
     } catch (error) {
       console.log(error)
       toast.error(error?.response?.data?.message);
+    }finally{
+      setRegisterLoading(false)
     }
 
   };
@@ -49,11 +54,11 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen  bg-gray-50 py-10">
-     <div className="max-w-7xl px-5 mx-auto  flex flex-col 
+    <div className="min-h-screen  bg-gray-50 max-w-7xl px-4 mx-auto  py-10 ">
+     <div className=" flex flex-col 
     md:flex-row justify-center items-center gap-15">
-         {/* Left side: form */}
-      <div className="w-4/6 lg:w-1/2 p-5  bg-white flex 
+      {/* Left side: form */}
+      <div className="lg:w-1/2 p-5  bg-white flex 
       flex-col justify-center  mx-auto shadow-md
       rounded-lg">
         <h1 className="text-4xl font-bold mb-4 text-gray-900">
@@ -132,7 +137,7 @@ const Register = () => {
             type="submit"
             className="w-full cursor-pointer bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-md transition duration-300"
           >
-            Register
+            {registerLoading ? 'Registering...' :'Register'}
           </button>
         </form>
 

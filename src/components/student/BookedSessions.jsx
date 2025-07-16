@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import Loader from "../../additionals/Loader";
 import { Link } from "react-router";
 import { dateFormat } from "../../utilities/dateFormate";
+import Fetching from "../../additionals/Fetching";
 
 
 
@@ -12,7 +13,7 @@ const BookedSessions = () => {
   const [bookedSessions, setBookedSessions] = useState([]);
 
    // get all notes created by student
-  const { data, isPending, isError, error } = useQuery({
+  const { data, isPending, isError, error,isFetching } = useQuery({
     queryKey: ["booked"],
     queryFn: () => apiRequiestWithCredentials("get", "/booked/my-bookings"),
     refetchOnWindowFocus: true,
@@ -37,7 +38,7 @@ const BookedSessions = () => {
 
 
 // load page when data fateching 
-  if (isPending) {
+  if (isPending || !data) {
     return <Loader />;
   }
 
@@ -49,13 +50,13 @@ const BookedSessions = () => {
         View and manage all your enrolled study sessions.
       </p>
 
-     {bookedSessions.length === 0 ? (
-      <div className="min-h-[10vh] w-full flex justify-center items-center">
+     {isFetching ? <Fetching /> : bookedSessions.length === 0 ? (
+      <div className="w-full flex justify-center items-center">
         <p className="text-gray-600 mt-10">You haven’t booked any sessions yet.</p>
         </div>
       ) : (
         <div className="overflow-x-auto bg-white rounded-lg shadow">
-          <table className="min-w-[850px] w-full  table-auto text-left text-sm">
+          <table className="min-w-[900px] w-full  table-auto text-left ">
             <thead className="bg-green-600 text-white">
               <tr>
                 <th className="px-6 py-4 font-semibold">Image</th>
