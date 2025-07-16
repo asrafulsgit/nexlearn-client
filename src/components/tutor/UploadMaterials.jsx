@@ -8,22 +8,6 @@ import { toast } from "react-toastify";
 import Fetching from "../../additionals/Fetching";
 import { Helmet } from "react-helmet";
 
-const dummySessions = [
-  {
-    id: "sess1",
-    title: "Math Basics",
-    startDate: "2025-08-01",
-    endDate: "2025-08-15",
-  },
-  {
-    id: "sess2",
-    title: "Physics Advanced",
-    startDate: "2025-09-01",
-    endDate: "2025-09-20",
-  },
-];
-
-const tutorEmail = "tutor@example.com";
 
 const UploadMaterials = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -70,6 +54,7 @@ const UploadMaterials = () => {
     setModalOpen(false);
     setSelectedSession(null);
   };
+  
   // update settings
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));

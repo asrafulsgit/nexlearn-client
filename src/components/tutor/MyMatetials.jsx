@@ -44,26 +44,24 @@ const MyMaterials = () => {
             setEditing(null);
             toast.success("Material updated.");
           } catch (err) {
-      
             toast.error("Failed to update material");
           }finally{
-            updateLoading(false);
+            setUpdateLoading(false);
           }
   };
-
   // Delete handler
+  const [deleteLoading,setDeleteLoading]=useState(false)
   const handleDelete = async(id) => {
-    setUpdateLoading(true);
+    setDeleteLoading(true);
     try {
           await apiRequiestWithCredentials("delete", `/materials/tutor/${id}`);
           await queryClient.invalidateQueries({ queryKey: ['tmaterials'] });
             setDeleting(null);
             toast.success("Material deleted.");
           } catch (err) {
-   
             toast.error("Failed to delete material");
           }finally{
-            setUpdateLoading(false);
+            setDeleteLoading(false);
           } 
    
   };
@@ -194,7 +192,7 @@ const MyMaterials = () => {
                 className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
                 onClick={() => handleDelete(deleting?._id)}
               >
-               {updateLoading ? 'Deleting...' : 'Delete'}
+               {deleteLoading ? 'Deleting...' : 'Delete'}
               </button>
             </div>
           </div>

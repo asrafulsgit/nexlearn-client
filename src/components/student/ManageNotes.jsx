@@ -62,9 +62,9 @@ setUpdateLoading(false)
     
   };
 
-  
+  const [deleteLoading,setDeleteLoading]=useState(false)
   const handleDelete = async() => {
-    setUpdateLoading(true)
+    setDeleteLoading(true)
      try {
           await apiRequiestWithCredentials("delete", `/notes/student/${deleteId}`);
           await queryClient.invalidateQueries({ queryKey: ['snotes'] });
@@ -75,7 +75,7 @@ setUpdateLoading(false)
            
             toast.error("Failed to delete note");
           }finally{
-            setUpdateLoading(false)
+            setDeleteLoading(false)
           }
 
 
@@ -229,7 +229,7 @@ setUpdateLoading(false)
                   onClick={handleDelete}
                   className="cursor-pointer px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
                 >
-                  {updaleLoading ? 'Deleting...': 'Confirm'}
+                  {deleteLoading ? 'Deleting...': 'Confirm'}
                 </button>
               </div>
             </div>
