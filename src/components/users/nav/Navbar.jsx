@@ -28,8 +28,7 @@ const Navbar = () => {
           setUserInfo(null)
           setIsLoggedIn(false)
           toast.success('User logout successfull')
-          navigate('/');
-         
+          navigate('/login');
         } catch (error) {
           toast.error(error?.response?.data?.message)
         }finally{
