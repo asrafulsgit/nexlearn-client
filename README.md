@@ -1,12 +1,106 @@
-# React + Vite
+# 🎓 NexLearn Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Project Name:** NexLearn  
+**Admin Login:**  
+- Email: `sourob2356@gmail.com`  
+- Password: `123456`  
 
-Currently, two official plugins are available:
+**Live URL:** _[Add Live Link Here]_
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 🌟 Overview
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+NexLearn is a modern frontend application built with **React** and **Tailwind CSS**, serving as the primary interface for students, tutors, and administrators. It communicates with the NexLearn backend for features like authentication, session booking, note management, and more.
+
+---
+
+## 🚀 Key Features
+
+### 🔐 User Authentication
+- Students, Tutors, and Admins can register and log in.
+- Google OAuth login support via Firebase.
+
+### 📚 Study Sessions
+- List all available sessions with:
+  - Search by title or tutor
+  - Filter by subject/category
+  - Pagination
+- **Booking Logic**:
+  - If session is **free**, student can **book immediately**.
+  - If session is **paid**, student must **pay via Stripe** to confirm booking.
+- View session details, including tutor info, reviews, and description.
+- Add a review after attending a session.
+
+### 👨‍🏫 Tutors
+- Browse and filter tutors by name or subject.
+- View tutor profiles and sessions.
+
+### 🧑‍🎓 Student Dashboard
+- See list of booked sessions
+- Add, update, delete personal notes
+- Access and download study materials
+
+### 🧑‍🏫 Tutor Dashboard
+- Create new sessions with details and price
+- Manage own sessions (update or delete)
+- Upload/view/delete materials for sessions
+
+### 🛠️ Admin Dashboard
+- Manage users (students, tutors, admins)
+- Approve, reject, edit, or delete any session
+- View and delete uploaded materials
+- Approve or reject tutor account requests
+
+### 🌐 Additional Pages
+- **Landing Page** with:
+  - Hero banner
+  - Featured Study Sessions
+  - What You Can Do with NexLearn
+  - Why Choose NexLearn
+  - How It Works
+  - Footer with navigation
+- **Static Content Pages**:
+  - About
+  - Contact
+  - FAQ
+  - Privacy Policy
+  - Terms & Conditions
+  - Accessibility
+- **404 Not Found Page**:
+  - Friendly not found image
+  - "Go Home" button for navigation
+
+---
+
+## 🛠️ Getting Started
+
+### 1. Clone the Repository
+```bash
+git clone 
+cd nexlearn/client
+Install dependencies
+
+bash
+npm install
+```
+```env
+Configure environment variables
+Create .env with:
+
+VITE_FIREBASE_APIKEY =  ''
+VITE_FIREBASE_AUTHDOMAIN = '' 
+VITE_FIREBASE_PROJECTID =  ''
+VITE_FIREBASE_MESSAGINGSENDERID =  ''
+VITE_FIREBASE_STORAGEBUCKET =  ''
+VITE_FIREBASE_APPID =  ''
+VITE_PUBLISHABLE_KEY = ' '
+
+VITE_BACKEND_URL = ''
+```
+
+```bash
+npm run dev
+```
+
+
