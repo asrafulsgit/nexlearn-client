@@ -6,6 +6,7 @@ import { dateFormat } from "../../utilities/dateFormate";
 import { queryClient } from "../../utilities/queryclient";
 import { toast } from "react-toastify";
 import Fetching from "../../additionals/Fetching";
+import { Helmet } from "react-helmet";
 
 const dummySessions = [
   {
@@ -93,7 +94,11 @@ const UploadMaterials = () => {
   };
 
   return (
-    <div className="min-h-[70vh]  max-w-7xl mx-auto px-4 py-10">
+  <> 
+  <Helmet>
+        <title>NexLearn | Upload Materials</title>
+      </Helmet>
+  <div className="min-h-[70vh]  max-w-7xl mx-auto px-4 py-10">
       <h1 className="text-3xl font-bold mb-2">Upload Study Materials</h1>
       <p className="text-gray-700 mb-8">
         Add images and Google Drive links for your approved study sessions.
@@ -271,7 +276,7 @@ const UploadMaterials = () => {
           </div>
         </div>
       )}
-    </div>
+    </div></> 
   );
 };
 

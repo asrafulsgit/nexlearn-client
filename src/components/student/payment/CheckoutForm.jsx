@@ -3,6 +3,7 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../../../controllers/AuthProvider";
 import { Link, useParams, useSearchParams } from "react-router";
 import { apiRequiestWithCredentials } from "../../../utilities/handleApis";
+import { Helmet } from "react-helmet";
 
 const CheckoutForm = () => {
   const { userInfo } = useContext(AuthContext);
@@ -84,7 +85,11 @@ const CheckoutForm = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto my-10 bg-white shadow-xl rounded-lg p-6">
+  <>  
+  <Helmet>
+        <title>NexLearn | Checkout</title>
+      </Helmet>
+  <div className="max-w-md mx-auto my-10 bg-white shadow-xl rounded-lg p-6">
       {paymentMethod ? (
         <div className="text-center">
           <h2 className="text-xl font-semibold text-green-600 mb-2">
@@ -152,7 +157,7 @@ const CheckoutForm = () => {
           </SubmitButton>
         </form>
       )}
-    </div>
+    </div></>
   );
 };
 

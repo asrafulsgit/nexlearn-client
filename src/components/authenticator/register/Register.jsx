@@ -3,6 +3,7 @@ import { apiRequiest } from "../../../utilities/handleApis";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../../../controllers/AuthProvider";
+import { Helmet } from "react-helmet";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -54,7 +55,12 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen  bg-gray-50 max-w-7xl px-4 mx-auto  py-10 ">
+  <> 
+  <Helmet>
+        <title>NexLearn | Register</title>
+      </Helmet>
+  
+  <div className="min-h-screen  bg-gray-50 max-w-7xl px-4 mx-auto  py-10 ">
      <div className=" flex flex-col 
     md:flex-row justify-center items-center gap-15">
       {/* Left side: form */}
@@ -196,7 +202,7 @@ const Register = () => {
         </div>
       </div>
      </div>
-    </div>
+    </div></>
   );
 };
 

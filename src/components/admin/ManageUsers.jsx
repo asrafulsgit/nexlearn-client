@@ -5,6 +5,7 @@ import Loader from "../../additionals/Loader";
 import { toast } from "react-toastify";
 import { queryClient } from "../../utilities/queryclient";
 import Fetching from "../../additionals/Fetching";
+import { Helmet } from "react-helmet";
 
 
 
@@ -134,6 +135,9 @@ if(isPending || !data){
   }
   return (
    <> 
+   <Helmet>
+        <title>NexLearn |  Manage Users</title>
+      </Helmet>
    <div className="max-w-7xl mx-auto px-4 min-h-[80vh] pb-15">
       
       <div className="my-8">

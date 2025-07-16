@@ -8,6 +8,7 @@ import { dateFormat } from "../../../utilities/dateFormate";
 import { AuthContext } from "../../../controllers/AuthProvider";
 import { queryClient } from "../../../utilities/queryclient";
 import { getSessionStatus } from "../../../utilities/sessionStatus";
+import { Helmet } from "react-helmet";
 
 const SessionDetails = () => {
   // const session = {
@@ -149,7 +150,11 @@ try {
   }
   
   return (
-    <section className="min-h-screen bg-gray-50 py-10 ">
+   <> 
+   <Helmet>
+        <title>NexLearn | Session Details</title>
+      </Helmet>
+   <section className="min-h-screen bg-gray-50 py-10 ">
       <div className="max-w-7xl mx-auto px-4">
         <div className="mb-10">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">{session?.title}</h1>
@@ -289,6 +294,7 @@ try {
         
       </div>
     </section>
+    </>
   );
 };
 

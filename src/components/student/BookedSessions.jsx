@@ -6,6 +6,7 @@ import Loader from "../../additionals/Loader";
 import { Link } from "react-router";
 import { dateFormat } from "../../utilities/dateFormate";
 import Fetching from "../../additionals/Fetching";
+import { Helmet } from "react-helmet";
 
 
 
@@ -43,7 +44,9 @@ const BookedSessions = () => {
   }
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-10 min-h-screen
+  <> <Helmet>
+          <title>NexLearn | Booked Sessions</title>
+        </Helmet> <section className="max-w-7xl mx-auto px-4 py-10 min-h-screen
      bg-gray-50">
       <h1 className="text-3xl font-bold text-gray-800 mb-2">My Booked Sessions</h1>
       <p className="text-gray-500 mb-6">
@@ -101,7 +104,7 @@ const BookedSessions = () => {
           </table>
         </div>
       )}
-    </section>
+    </section></>
   );
 };
 

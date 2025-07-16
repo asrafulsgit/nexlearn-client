@@ -5,6 +5,7 @@ import Loader from "../../additionals/Loader";
 import { apiRequiestWithCredentials } from "../../utilities/handleApis";
 import { queryClient } from "../../utilities/queryclient";
 import Fetching from "../../additionals/Fetching";
+import { Helmet } from "react-helmet";
 
 const MyMaterials = () => {
   const [materials, setMaterials] = useState([]);
@@ -72,7 +73,11 @@ const MyMaterials = () => {
   }
 
   return (
-    <div className="min-h-[70vh] max-w-7xl mx-auto px-4 py-10">
+  <>  
+  <Helmet>
+        <title>NexLearn | My Materials</title>
+      </Helmet>
+  <div className="min-h-[70vh] max-w-7xl mx-auto px-4 py-10">
       <h1 className="text-3xl font-bold mb-6">My Uploaded Materials</h1>
 
       <div className="overflow-x-auto">
@@ -195,7 +200,7 @@ const MyMaterials = () => {
           </div>
         </div>
       )}
-    </div>
+    </div></>
   );
 };
 

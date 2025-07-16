@@ -15,7 +15,7 @@ const ELEMENTS_OPTIONS = {
 
 const Checkout = () => {
   return (
-    <div className="AppWrapper">
+  <div className="AppWrapper">
       <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
         <CheckoutForm />
       </Elements>

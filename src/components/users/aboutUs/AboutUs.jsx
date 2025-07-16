@@ -1,11 +1,16 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../../../controllers/AuthProvider";
 import { Link } from "react-router";
+import { Helmet } from "react-helmet";
 
 const AboutUs = () => {
   const {isLoggedIn}=useContext(AuthContext);
   return (
-    <section className="min-h-screen bg-gray-50 py-10 ">
+   <> 
+   <Helmet>
+        <title>NexLearn | About Us</title>
+      </Helmet>
+   <section className="min-h-screen bg-gray-50 py-10 ">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-12">
@@ -60,7 +65,7 @@ const AboutUs = () => {
           </Link>
         </div>}
       </div>
-    </section>
+    </section></>
   );
 };
 

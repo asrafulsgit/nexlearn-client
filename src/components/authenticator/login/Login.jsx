@@ -4,6 +4,7 @@ import { apiRequiestWithCredentials } from "../../../utilities/handleApis";
 import { Link, useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../../controllers/AuthProvider";
+import { Helmet } from "react-helmet";
 const Login = () => {
   const navigate = useNavigate();
   const {setIsLoggedIn, setLoading,setUserInfo,handleLoginWithGoogle}=useContext(AuthContext);
@@ -47,7 +48,9 @@ const [registerLoading,setRegisterLoading]=useState(false)
   };
 
   return (
-    <div className="min-h-screen  bg-gray-50 py-10 max-w-7xl px-4 mx-auto">
+  <> <Helmet>
+          <title>NexLearn | Login</title>
+        </Helmet> <div className="min-h-screen  bg-gray-50 py-10 max-w-7xl px-4 mx-auto">
       <div className="  flex flex-col gap-10 md:gap-0
     md:flex-row justify-center items-center ">
         {/* Left Side Design */}
@@ -162,7 +165,7 @@ const [registerLoading,setRegisterLoading]=useState(false)
         </div>
       </div>
       </div>
-    </div>
+    </div></>
   );
 };
 

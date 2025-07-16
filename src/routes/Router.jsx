@@ -26,13 +26,13 @@ import StudentAuth from "../middlewares/StudentAuth";
 import TutorAuth from "../middlewares/TutorAuth";
 import AdminAuth from "../middlewares/AdminAuth";
 import UnAuth from "../middlewares/UnAuth";
-import PaymentSuccess from "../components/users/payment/PaymentSuccess";
 import Checkout from "../components/student/payment/Checkout";
 import UserAuth from "../middlewares/UserAuth";
 import MyStudyMaterials from "../components/student/MyStudyMaterials";
 import PrivacyPolicy from "../components/users/others/PrivacyPolicy";
 import TermsAndConditions from "../components/users/others/TermsAndConditions";
 import Accessibility from "../components/users/others/Accessibility";
+import NotFoundPage from "../additionals/NotFoundPage";
 
 
 
@@ -51,7 +51,8 @@ const Router = createBrowserRouter([
             },
             { 
                 path : 'session/:id',
-                element :<UserAuth> <SessionDetails /> </UserAuth>   
+                element :<UserAuth> <SessionDetails /> </UserAuth>,
+                errorElement : <NotFoundPage />  
             },
             { 
                 path : 'tutors',
@@ -95,11 +96,13 @@ const Router = createBrowserRouter([
             },                            
             {                        
                 path : 'my-study-materials/:sessionId', 
-                element : <StudentAuth > <MyStudyMaterials /> </StudentAuth> 
+                element : <StudentAuth > <MyStudyMaterials /> </StudentAuth>,
+                errorElement : < NotFoundPage />
             },                            
             {                        
                 path : 'checkout/:sessionId', 
-                element : <StudentAuth > <Checkout /> </StudentAuth> 
+                element : <StudentAuth > <Checkout /> </StudentAuth> ,
+                errorElement : < NotFoundPage />
             },                              // tutor auth pages
             {                        
                 path : 'create-session', 
@@ -132,11 +135,7 @@ const Router = createBrowserRouter([
             {                        
                 path : 'manage-tutors', 
                 element : <AdminAuth> <ManageTutors /> </AdminAuth>
-            },
-            {                        
-                path : 'success/:paymentId', 
-                Component :  PaymentSuccess 
-            },              // others pages
+            },            // others pages
             {                        
                 path : 'privacy-policy', 
                 Component :  PrivacyPolicy 
@@ -157,9 +156,9 @@ const Router = createBrowserRouter([
     //         }
         ]
     },
-    // {
-    //     path: '/*',
-    //     Component : NotFoundPage
-    // }
+    {
+        path: '/*',
+        Component : NotFoundPage
+    }
 ]) 
 export default Router;

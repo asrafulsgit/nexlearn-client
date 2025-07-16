@@ -5,6 +5,7 @@ import Loader from "../../additionals/Loader";
 import { toast } from "react-toastify";
 import { queryClient } from "../../utilities/queryclient";
 import Fetching from "../../additionals/Fetching";
+import { Helmet } from "react-helmet";
 
 const ManageSessions = () => {
   const [sessions, setSessions] = useState([]);
@@ -147,6 +148,9 @@ if(isPending || !data){
 
   return (
     <>
+    <Helmet>
+        <title>NexLearn |  Manage Sessions</title>
+      </Helmet>
       <div className="max-w-7xl mx-auto px-4 min-h-[70vh] pb-20">
         <div className="my-8">
           <h2 className="text-2xl font-bold mb-1">Manage Study Sessions</h2>

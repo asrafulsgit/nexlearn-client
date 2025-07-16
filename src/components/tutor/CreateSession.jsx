@@ -3,6 +3,7 @@ import { AuthContext } from "../../controllers/AuthProvider";
 import { apiRequiestWithCredentials } from "../../utilities/handleApis";
 import { toast } from "react-toastify";
 import { queryClient } from "../../utilities/queryclient";
+import { Helmet } from "react-helmet";
 
 const CreateSession = () => {
   const {userInfo} = useContext(AuthContext);
@@ -47,7 +48,11 @@ const CreateSession = () => {
 
   return (
 
-      <div className="min-h-[70vh]  max-w-7xl mx-auto px-4 py-10
+  <>   
+  <Helmet>
+          <title>NexLearn | Create Sessions</title>
+        </Helmet>
+  <div className="min-h-[70vh]  max-w-7xl mx-auto px-4 py-10
        bg-white rounded-lg shadow-lg  z-10 relative">
         <h2 className="text-3xl font-bold text-gray-800 mb-2">Create Study Session</h2>
         <p className="text-gray-600 mb-8">Fill in the form below to create a new session.</p>
@@ -197,7 +202,7 @@ const CreateSession = () => {
             {postLoading ? 'Creating...' : 'Create Session'}
           </button>
         </form>
-      </div>
+      </div></> 
    
   );
 };

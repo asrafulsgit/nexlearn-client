@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { dateFormat } from "../../utilities/dateFormate";
 import { queryClient } from "../../utilities/queryclient";
 import Fetching from "../../additionals/Fetching";
+import { Helmet } from "react-helmet";
 
 
 
@@ -48,7 +49,11 @@ const MySessions = () => {
 
  
   return (
-    <section className="min-h-[70vh] max-w-7xl mx-auto px-4 py-10">
+  <> 
+  <Helmet>
+        <title>NexLearn | My Sessions</title>
+      </Helmet>
+  <section className="min-h-[70vh] max-w-7xl mx-auto px-4 py-10">
       <h2 className="text-3xl font-bold mb-2 text-gray-800">My Study Sessions</h2>
       <p className="text-gray-600 mb-6">View and manage all of your submitted study sessions.</p>
 
@@ -150,7 +155,7 @@ const MySessions = () => {
           </div>
         </div>
       )}
-    </section>
+    </section></> 
   );
 };
 

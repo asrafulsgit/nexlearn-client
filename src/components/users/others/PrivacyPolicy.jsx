@@ -1,10 +1,13 @@
 // pages/PrivacyPolicy.jsx
 
 import React from "react";
+import { Helmet } from "react-helmet";
 
 const PrivacyPolicy = () => {
   return (
-    <section className="max-w-4xl mx-auto px-4 py-12 text-gray-800">
+  <> <Helmet>
+        <title>NexLearn | Privacy Policy</title>
+      </Helmet>  <section className="max-w-4xl mx-auto px-4 py-12 text-gray-800">
       <h1 className="text-3xl font-bold mb-6">Privacy Policy</h1>
       <p className="mb-4">
         At <strong>NextLearn</strong>, we respect your privacy and are committed to protecting your personal data. This Privacy Policy explains how we collect, use, and protect your information.
@@ -37,7 +40,7 @@ const PrivacyPolicy = () => {
       </p>
 
       <p className="text-sm text-gray-600 mt-8">Last updated: July 2025</p>
-    </section>
+    </section></> 
   );
 };
 

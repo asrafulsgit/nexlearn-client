@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { apiRequiest } from "../../../utilities/handleApis";
 import { toast } from "react-toastify";
+import { Helmet } from "react-helmet";
 
 // const tutorsData = [
 //   {
@@ -112,7 +113,11 @@ const Tutors = () => {
                }
 
   return (
-    <section className="min-h-screen bg-gray-50 py-10  ">
+  <> 
+  <Helmet>
+        <title>NexLearn | Tutors</title>
+      </Helmet>
+  <section className="min-h-screen bg-gray-50 py-10  ">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-10">
@@ -180,7 +185,7 @@ const Tutors = () => {
         }
 
       </div>
-    </section>
+    </section></>
   );
 };
 

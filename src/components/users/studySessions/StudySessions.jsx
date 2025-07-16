@@ -6,6 +6,7 @@ import Loader from "../../../additionals/Loader";
 import { Link } from "react-router";
 import { dateFormat } from "../../../utilities/dateFormate";
 import { getSessionStatus } from "../../../utilities/sessionStatus";
+import { Helmet } from "react-helmet";
 
 
 const StudySessions= () => {
@@ -99,7 +100,12 @@ const result = await refetch();
   }
 
   return (
-    <section className="min-h-screen bg-gray-50 py-12 px-4 ">
+  <>  
+  <Helmet>
+        <title>NexLearn | Sessions</title>
+      </Helmet>
+  
+  <section className="min-h-screen bg-gray-50 py-12 px-4 ">
       {/* Header */}
       <div className="text-center mb-12">
         <h1 className="text-4xl font-extrabold text-gray-900 mb-2">Study Sessions</h1>
@@ -238,7 +244,7 @@ const result = await refetch();
     }
 
 
-    </section>
+    </section></>
   );
 };
 

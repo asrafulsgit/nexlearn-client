@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import Loader from '../../additionals/Loader';
 import Fetching from '../../additionals/Fetching';
+import { Helmet } from 'react-helmet';
 
 const MyStudyMaterials = () => {
     const {sessionId}=useParams();
@@ -62,7 +63,12 @@ const MyStudyMaterials = () => {
   }
 
   return (
-    <div className='max-w-7xl px-4 mx-auto py-10 min-h-[60vh]'>
+  <>  
+  <Helmet>
+        <title>NexLearn | Materials</title>
+      </Helmet>
+  
+  <div className='max-w-7xl px-4 mx-auto py-10 min-h-[60vh]'>
   
           <div>
             <h3 className="text-xl font-semibold text-gray-800 mb-4">
@@ -105,7 +111,7 @@ const MyStudyMaterials = () => {
               ))}
             </div> }
           </div>
-    </div>
+    </div></>
   )
 }
 

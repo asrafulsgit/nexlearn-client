@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiRequiestWithCredentials } from "../../utilities/handleApis";
 import { queryClient } from "../../utilities/queryclient";
 import Fetching from "../../additionals/Fetching";
+import { Helmet } from "react-helmet";
 
 
 
@@ -55,6 +56,10 @@ const ManageMaterials = () => {
   }
   return (
   <> 
+  <Helmet>
+        <title>NexLearn | Manage Materials</title>
+      </Helmet>
+
     <div className="max-w-7xl mx-auto px-4 py-10 min-h-[70vh]">
       <div className="">
       <h2 className="text-2xl font-bold mb-1">Manage Study Materials</h2>

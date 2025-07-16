@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Helmet } from "react-helmet";
 
 const faqsData = [
   {
@@ -93,7 +94,11 @@ const FAQ = () => {
   };
 
   return (
-    <section className="max-w-5xl mx-auto p-6 my-12 bg-white rounded-lg shadow-md">
+  <>  
+    <Helmet>
+        <title>NexLearn | FAQ</title>
+      </Helmet>
+  <section className="max-w-5xl mx-auto p-6 my-12 bg-white rounded-lg shadow-md">
       <h1 className="text-4xl font-bold mb-8 text-center text-gray-900">
         Frequently Asked Questions
       </h1>
@@ -107,7 +112,7 @@ const FAQ = () => {
           />
         ))}
       </div>
-    </section>
+    </section></>
   );
 };
 

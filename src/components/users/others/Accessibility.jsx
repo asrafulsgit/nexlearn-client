@@ -1,10 +1,15 @@
 // pages/Accessibility.jsx
 
 import React from "react";
+import { Helmet } from "react-helmet";
 
 const Accessibility = () => {
   return (
-    <section className="max-w-4xl mx-auto px-4 py-12 text-gray-800">
+  <> 
+  <Helmet>
+        <title>NexLearn | Accessibility</title>
+      </Helmet> 
+  <section className="max-w-4xl mx-auto px-4 py-12 text-gray-800">
       <h1 className="text-3xl font-bold mb-6">Accessibility Statement</h1>
       <p className="mb-4">
         <strong>NextLearn</strong> is committed to providing an inclusive and accessible learning environment for all users, regardless of ability or technology.
@@ -25,6 +30,8 @@ const Accessibility = () => {
 
       <p className="text-sm text-gray-600 mt-8">Last updated: July 2025</p>
     </section>
+    
+    </>
   );
 };
 

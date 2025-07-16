@@ -1,10 +1,15 @@
 // pages/TermsAndConditions.jsx
 
 import React from "react";
+import { Helmet } from "react-helmet";
 
 const TermsAndConditions = () => {
   return (
-    <section className="max-w-4xl mx-auto px-4 py-12 text-gray-800">
+  <> 
+  <Helmet>
+        <title>NexLearn | Terms And Conditions</title>
+      </Helmet>
+  <section className="max-w-4xl mx-auto px-4 py-12 text-gray-800">
       <h1 className="text-3xl font-bold mb-6">Terms & Conditions</h1>
       <p className="mb-4">
         These Terms & Conditions ("Terms") govern your use of the <strong>NextLearn</strong> platform. By using our services, you agree to comply with these terms.
@@ -38,6 +43,7 @@ const TermsAndConditions = () => {
 
       <p className="text-sm text-gray-600 mt-8">Last updated: July 2025</p>
     </section>
+    </> 
   );
 };
 

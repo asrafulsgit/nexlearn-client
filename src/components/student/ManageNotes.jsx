@@ -5,6 +5,7 @@ import Loader from "../../additionals/Loader";
 import { toast } from "react-toastify";
 import { queryClient } from "../../utilities/queryclient";
 import Fetching from "../../additionals/Fetching";
+import { Helmet } from "react-helmet";
 
 
 
@@ -87,7 +88,10 @@ setUpdateLoading(false)
     return <Loader />;
   }
   return (
-    <section className="min-h-screen  max-w-7xl mx-auto px-4  py-10 bg-gray-50">
+  <> 
+  <Helmet>
+        <title>NexLearn | Manage Notes</title>
+      </Helmet> <section className="min-h-screen  max-w-7xl mx-auto px-4  py-10 bg-gray-50">
       <div className="">
         <h2 className="text-3xl font-bold text-gray-800 mb-6">Manage Your Notes</h2>
        {isFetching ? <Fetching />  :   notes.length > 0 ? <div className="overflow-x-auto bg-white shadow rounded-lg">
@@ -232,7 +236,7 @@ setUpdateLoading(false)
           </div>
         )}
       </div>
-    </section>
+    </section></>
   );
 };
 

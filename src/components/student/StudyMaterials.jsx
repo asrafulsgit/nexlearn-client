@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import Loader from "../../additionals/Loader";
 import { Link } from "react-router";
 import Fetching from "../../additionals/Fetching";
+import { Helmet } from "react-helmet";
 
 const StudyMaterials = () => {
   const [activeSessionId, setActiveSessionId] = useState(null);
@@ -49,7 +50,9 @@ const StudyMaterials = () => {
   }
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-10 bg-gray-50 min-h-screen">
+  <><Helmet>
+        <title>NexLearn | Study Materials </title>
+      </Helmet>  <section className="max-w-7xl mx-auto px-4 py-10 bg-gray-50 min-h-screen">
       <div className="">
         <h2 className="text-3xl font-bold mb-6 text-gray-800">Study Materials</h2>
         <p className="text-gray-600 mb-8">
@@ -93,7 +96,7 @@ const StudyMaterials = () => {
           </div>
         )}
       </div>
-    </section>
+    </section></>
   );
 };
 

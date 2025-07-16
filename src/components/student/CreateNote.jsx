@@ -3,6 +3,7 @@ import { AuthContext } from "../../controllers/AuthProvider";
 import { apiRequiestWithCredentials } from "../../utilities/handleApis";
 import { queryClient } from "../../utilities/queryclient";
 import { toast } from "react-toastify";
+import { Helmet } from "react-helmet";
 
 const CreateNote = () => {
   const {userInfo}=useContext(AuthContext);
@@ -40,7 +41,10 @@ const CreateNote = () => {
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-4 min-h-screen bg-gray-50  py-10 ">
+  <>
+  <Helmet>
+        <title>NexLearn | Create Session</title>
+      </Helmet>  <section className="max-w-7xl mx-auto px-4 min-h-screen bg-gray-50  py-10 ">
       <div className=" bg-white shadow-md rounded-lg py-8 px-5">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
           Create a New Note
@@ -105,7 +109,7 @@ const CreateNote = () => {
           
         </form>
       </div>
-    </section>
+    </section></>
   );
 };
 
