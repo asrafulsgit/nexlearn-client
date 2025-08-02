@@ -5,7 +5,7 @@
 - Email: `sourob2356@gmail.com`  
 - Password: `123456`  
 
-**Live URL:** _[Add Live Link Here]_
+**Live URL:** _[https://nextlearn25.netlify.app]_
 
 ---
 
