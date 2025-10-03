@@ -1,10 +1,19 @@
 # 🎓 NexLearn Frontend
 
 **Project Name:** NexLearn  
+
 **Admin Login:**  
 - Email: `sourob2356@gmail.com`  
-- Password: `123456`  
+- Password: `123456`
+  
+**Tutor Login:**  
+- Email: `faisal@gmail.com`  
+- Password: `123456`
 
+**Student Login:**  
+- Email: `karim@gmail.com`  
+- Password: `123456`
+  
 **Live URL:** _[https://nextlearn25.netlify.app]_
 
 ---
