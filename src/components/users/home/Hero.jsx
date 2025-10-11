@@ -4,7 +4,7 @@ const Hero = () => {
   return (
     <section
   id="banner"
-  className="relative bg-gray-900 text-white py-24 sm:py-20 overflow-hidden page-section"
+  className="max-w-7xl mx-auto relative bg-gray-900 text-white py-24 sm:py-20 overflow-hidden page-section"
 >
   {/* Background Image with Dark Gradient Overlay */}
   <div className="absolute inset-0">
