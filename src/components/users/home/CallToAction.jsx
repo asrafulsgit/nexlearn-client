@@ -4,7 +4,7 @@ const CallToAction = () => {
   return (
     <section
       id="call-to-action"
-      className="max-w-7xl mx-auto py-16 bg-green-600 text-white text-center 
+      className="mx-auto py-16 bg-green-600 text-white text-center 
       relative overflow-hidden border-b border-green-400
       "
     >
