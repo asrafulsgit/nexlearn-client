@@ -85,7 +85,6 @@ const FAQItem = ({ faq, isOpen, toggle }) => {
   );
 };
 
-
 const FAQ = () => {
   const [openIndex, setOpenIndex] = useState(null);
 
@@ -94,25 +93,26 @@ const FAQ = () => {
   };
 
   return (
-  <>  
-    <Helmet>
+    <>
+      <Helmet>
         <title>NexLearn | FAQ</title>
       </Helmet>
-  <section className="max-w-5xl mx-auto p-6 my-12 bg-white rounded-lg shadow-md">
-      <h1 className="text-4xl font-bold mb-8 text-center text-gray-900">
-        Frequently Asked Questions
-      </h1>
-      <div>
-        {faqsData.map((faq, index) => (
-          <FAQItem
-            key={index}
-            faq={faq}
-            isOpen={openIndex === index}
-            toggle={() => toggleFAQ(index)}
-          />
-        ))}
-      </div>
-    </section></>
+      <section className="min-h-screen max-w-5xl mx-auto p-6 my-12 bg-white rounded-lg shadow-md">
+        <h1 className="text-4xl font-bold mb-8 text-center text-gray-900">
+          Frequently Asked Questions
+        </h1>
+        <div>
+          {faqsData.map((faq, index) => (
+            <FAQItem
+              key={index}
+              faq={faq}
+              isOpen={openIndex === index}
+              toggle={() => toggleFAQ(index)}
+            />
+          ))}
+        </div>
+      </section>
+    </>
   );
 };
 
